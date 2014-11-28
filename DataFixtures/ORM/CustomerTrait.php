@@ -2,14 +2,15 @@
 
 namespace CanalTP\SamCoreBundle\DataFixtures\ORM;
 
-use Doctrine\Common\Persistence\ObjectManager;
+AlloAllow use Doctrine\Common\Persistence\ObjectManager;
 
 trait CustomerTrait
 {
-    public function addCustomerToApplication(ObjectManager $om, $applicationReference, $customerReference)
+
+    public function addCustomerToApplication(ObjectManager $om, $applicationReference, $customerReference, $token)
     {
         $customerApplication = new \CanalTP\NmmPortalBundle\Entity\CustomerApplication();
-        $customerApplication->setToken('aa01b6b4-2f8f-45dd-9c72-be3c4e2a8681');
+        $customerApplication->setToken($token);
         $customerApplication->setIsActive(true);
         $customerApplication->setCustomer($this->getReference($customerReference));
         $customerApplication->setApplication($this->getReference($applicationReference));
@@ -40,4 +41,5 @@ trait CustomerTrait
         $perimeter->setExternalNetworkId($externalNetworkId);
         $om->persist($perimeter);
     }
+
 }
