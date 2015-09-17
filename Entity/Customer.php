@@ -186,7 +186,7 @@ class Customer extends AbstractEntity implements CustomerInterface
      *
      * @return Customer
      */
-    public function setApplications(array $applications)
+    public function setApplications($applications)
     {
         $this->applications = $applications;
 
@@ -198,7 +198,7 @@ class Customer extends AbstractEntity implements CustomerInterface
      *
      * @return Customer
      */
-    public function addApplication(Application $application)
+    public function addApplication($application)
     {
         $this->applications->add($application);
 
@@ -210,7 +210,7 @@ class Customer extends AbstractEntity implements CustomerInterface
      *
      * @return Customer
      */
-    public function removeApplication(Application $application)
+    public function removeApplication($application)
     {
         $this->applications->removeElement($application);
 
