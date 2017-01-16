@@ -1,128 +1,94 @@
 {
-   "stop_points":[
+   "stop_points": [
       {
-         "comment":"",
-         "codes":[
+         "codes": [
             {
-               "type":"external_code",
-               "value":"TTRSTPGB-2"
+               "type": "external_code",
+               "value": "JDRCHVIN1"
             },
             {
-               "type": "totem",
-               "value": "654895"
+               "type": "source",
+               "value": "CHVIN1"
             }
          ],
-         "name":"St Pierre Gare",
-         "coord":{
-            "lat":"47.386722",
-            "lon":"0.723013"
+         "name": "Château de Vincennes",
+         "links": [],
+         "coord": {
+            "lat": "48.844536",
+            "lon": "2.43951"
          },
-         "label":"St Pierre Gare (Saint-Pierre-des-Corps)",
-         "equipments":[
-
-         ],
-         "administrative_regions":[
+         "label": "Château de Vincennes (Vincennes)",
+         "equipments": [],
+         "administrative_regions": [
             {
-               "name":"Saint-Pierre-des-Corps",
-               "level":8,
-               "coord":{
-                  "lat":"47.3896286",
-                  "lon":"0.720388512"
+               "insee": "94080",
+               "name": "Vincennes",
+               "level": 8,
+               "coord": {
+                  "lat": "48.84745",
+                  "lon": "2.439671"
                },
-               "label":"Saint-Pierre-des-Corps (37700)",
-               "id":"admin:37233",
-               "zip_code":"37700"
+               "label": "Vincennes (94300)",
+               "id": "admin:108346",
+               "zip_code": "94300"
             }
          ],
-         "address":{
-            "name":"",
-            "house_number":0,
-            "coord":{
-               "lat":"47.386722",
-               "lon":"0.723013"
-            },
-            "label":" (Saint-Pierre-des-Corps)",
-            "id":"0.723013;47.386722"
-         },
-         "id":"stop_point:TTR:SP:STPGB-2",
-         "stop_area":{
-            "comment":"",
-            "codes":[
+         "id": "stop_point:JDR:SP:CHVIN1",
+         "stop_area": {
+            "codes": [
                {
-                  "type":"external_code",
-                  "value":"TTR627"
+                  "type": "external_code",
+                  "value": "JDRCHVIN"
+               },
+               {
+                  "type": "source",
+                  "value": "CHVIN"
                }
             ],
-            "name":"St Pierre Gare",
-            "coord":{
-               "lat":"47.386647",
-               "lon":"0.722741"
+            "name": "Château de Vincennes",
+            "links": [],
+            "coord": {
+               "lat": "48.844536",
+               "lon": "2.43951"
             },
-            "label":"St Pierre Gare (Saint-Pierre-des-Corps)",
-            "timezone":"Europe/Paris",
-            "id":"stop_area:TTR:SA:627"
+            "label": "Château de Vincennes (Vincennes)",
+            "timezone": "Europe/Paris",
+            "id": "stop_area:JDR:SA:CHVIN"
          }
       }
    ],
-   "pagination":{
-      "items_per_page":25,
-      "items_on_page":1,
-      "start_page":0,
-      "total_result":1
+   "pagination": {
+      "start_page": 0,
+      "items_on_page": 1,
+      "items_per_page": 25,
+      "total_result": 1
    },
-   "links":[
+   "feed_publishers": [
       {
-         "href":"http://navitia2-ws.ctp.dev.canaltp.fr/v1/coverage/fr-cen/stop_points/{stop_points.id}?collection=stop_points",
-         "type":"stop_points",
-         "rel":"stop_points",
-         "templated":true
-      },
-      {
-         "href":"http://navitia2-ws.ctp.dev.canaltp.fr/v1/coverage/fr-cen/stop_areas/{stop_area.id}?collection=stop_areas",
-         "type":"stop_area",
-         "rel":"stop_areas",
-         "templated":true
-      },
-      {
-         "href":"http://navitia2-ws.ctp.dev.canaltp.fr/v1/coverage/fr-cen/addresses/{address.id}?collection=addresses",
-         "type":"address",
-         "rel":"addresses",
-         "templated":true
-      },
-      {
-         "href":"http://navitia2-ws.ctp.dev.canaltp.fr/v1/coverage/fr-cen/stop_points/stop_point:TTR:SP:STPGB-2/route_schedules",
-         "rel":"route_schedules",
-         "templated":false
-      },
-      {
-         "href":"http://navitia2-ws.ctp.dev.canaltp.fr/v1/coverage/fr-cen/stop_points/stop_point:TTR:SP:STPGB-2/stop_schedules",
-         "rel":"stop_schedules",
-         "templated":false
-      },
-      {
-         "href":"http://navitia2-ws.ctp.dev.canaltp.fr/v1/coverage/fr-cen/stop_points/stop_point:TTR:SP:STPGB-2/arrivals",
-         "rel":"arrivals",
-         "templated":false
-      },
-      {
-         "href":"http://navitia2-ws.ctp.dev.canaltp.fr/v1/coverage/fr-cen/stop_points/stop_point:TTR:SP:STPGB-2/departures",
-         "rel":"departures",
-         "templated":false
-      },
-      {
-         "href":"http://navitia2-ws.ctp.dev.canaltp.fr/v1/coverage/fr-cen/stop_points/stop_point:TTR:SP:STPGB-2/places_nearby",
-         "rel":"places_nearby",
-         "templated":false
-      },
-      {
-         "href":"http://navitia2-ws.ctp.dev.canaltp.fr/v1/coverage/fr-cen/stop_points/stop_point:TTR:SP:STPGB-2/journeys",
-         "rel":"journeys",
-         "templated":false
-      },
-      {
-         "href":"http://navitia2-ws.ctp.dev.canaltp.fr/v1/coverage/fr-cen/stop_points/stop_point:TTR:SP:STPGB-2",
-         "type":"first",
-         "templated":false
+         "url": "",
+         "id": "jdr",
+         "license": "",
+         "name": ""
       }
-   ]
+   ],
+   "links": [
+      {
+         "href": "http://navitia2-ws.ctp.customer.canaltp.fr/v1/coverage/jdr/stop_points/{stop_points.id}",
+         "type": "stop_points",
+         "rel": "stop_points",
+         "templated": true
+      },
+      {
+         "href": "http://navitia2-ws.ctp.customer.canaltp.fr/v1/coverage/jdr/stop_areas/{stop_area.id}",
+         "type": "stop_area",
+         "rel": "stop_areas",
+         "templated": true
+      },
+      {
+         "href": "http://navitia2-ws.ctp.customer.canaltp.fr/v1/coverage/jdr/stop_points/stop_point:JDR:SP:CHVIN1",
+         "type": "first",
+         "templated": false
+      }
+   ],
+   "disruptions": []
 }
