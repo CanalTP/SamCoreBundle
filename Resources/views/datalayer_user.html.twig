@@ -1,8 +1,34 @@
-<script type="text/javascript">
-    if (typeof dataLayer !== 'undefined') {
-        dataLayer.push({
-            'user_id': '{{ app.user.id|default('unknown') }}',
-            'client_id': '{{ app.user.customer.id|default('unknown') }}'
-        });
+{% set userHasRightsOnTR = 'non' %}
+{% set userIsLogged = 'non' %}
+{% set clintUsersNb = 'unknown' %}
+
+{% if app.user %}
+    {% set userIsLogged = 'oui' %}
+
+    {% set clintUsersNb = app.user.customer.users|length %}
+
+    {% for app in app.user.customer.applications %}
+        {% if app.application.canonicalName == 'realtime' %}{% set userHasRightsOnTR = 'oui' %}{% endif %}
+    {% endfor %}
+
+{% endif %}
+
+
+{% set dataLayerData = {
+        'user_logged': userIsLogged,
+        'client_id': app.user.customer.id|default('unknown'),
+        'client_user_nr': clintUsersNb,
+        'user_id': app.user.id|default('unknown'),
+        'user_TR_rights' : userHasRightsOnTR,
+        'TR_user_role' : '',
+        'TR_user_creation_date' : '',
+        'TR_user_validation_date' : ''
     }
+%}
+
+
+<script type="text/javascript">
+  if (typeof dataLayer !== 'undefined') {
+    dataLayer.push({{ dataLayerData|json_encode()|raw }});
+  }
 </script>
