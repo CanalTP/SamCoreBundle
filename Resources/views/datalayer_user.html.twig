@@ -1,6 +1,10 @@
+{% spaceless %}
 {% set userHasRightsOnTR = 'non' %}
 {% set userIsLogged = 'non' %}
 {% set clintUsersNb = 'unknown' %}
+{% set trUserRoles = [] %}
+{% set trUserExpiresAt = 'unknown' %}
+{% set trUserCreatedAt = 'unknown' %}
 
 {% if app.user %}
     {% set userIsLogged = 'oui' %}
@@ -11,6 +15,23 @@
         {% if app.application.canonicalName == 'realtime' %}{% set userHasRightsOnTR = 'oui' %}{% endif %}
     {% endfor %}
 
+    {% if userHasRightsOnTR == 'oui' %}
+        {% for r in app.user.userRoles %}
+            {% set trUserRoles = trUserRoles|merge([r.name|replace({'RealTime':'', ' ': ''})]) %}
+        {% endfor %}
+
+        {% set trUserExpiresAt = app.user.expiresAt %}
+        {% if trUserExpiresAt %}
+            {% set trUserExpiresAt = app.user.expiresAt|date("d/m/Y") %}
+        {% endif %}
+
+        {% set trUserCreatedAt = app.user.createdAt %}
+        {% if trUserCreatedAt %}
+            {% set trUserCreatedAt = app.user.createdAt|date("d/m/Y") %}
+        {% endif %}
+
+    {% endif %}
+
 {% endif %}
 
 
@@ -20,15 +41,15 @@
         'client_user_nr': clintUsersNb,
         'user_id': app.user.id|default('unknown'),
         'user_TR_rights' : userHasRightsOnTR,
-        'TR_user_role' : '',
-        'TR_user_creation_date' : '',
-        'TR_user_validation_date' : ''
+        'TR_user_role' : trUserRoles|join('/'),
+        'TR_user_creation_date' : trUserCreatedAt,
+        'TR_user_validation_date' : trUserExpiresAt
     }
 %}
-
 
 <script type="text/javascript">
   if (typeof dataLayer !== 'undefined') {
     dataLayer.push({{ dataLayerData|json_encode()|raw }});
   }
 </script>
+{% endspaceless %}
