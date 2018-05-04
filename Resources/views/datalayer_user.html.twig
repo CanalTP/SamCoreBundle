@@ -1,8 +1,50 @@
-<script type="text/javascript">
-    if (typeof dataLayer !== 'undefined') {
-        dataLayer.push({
-            'user_id': '{{ app.user.id|default('unknown') }}',
-            'client_id': '{{ app.user.customer.id|default('unknown') }}'
-        });
+{% spaceless %}
+{% set userHasRightsOnTR = 'non' %}
+{% set userIsLogged = 'non' %}
+{% set clientUsersNb = 'unknown' %}
+{% set trUserRoles = [] %}
+{% set trUserCreatedAt = 'unknown' %}
+
+{% if app.user %}
+    {% set userIsLogged = 'oui' %}
+
+    {% set clientUsersNb = app.user.customer.users|length %}
+
+    {% for app in app.user.customer.applications %}
+        {% if app.application.canonicalName == 'realtime' %}{% set userHasRightsOnTR = 'oui' %}{% endif %}
+    {% endfor %}
+
+    {% if userHasRightsOnTR == 'oui' %}
+        {% for r in app.user.userRoles %}
+            {% if r.application.canonicalName == 'realtime' %}
+                {% set trUserRoles = trUserRoles|merge([r.name|replace({'RealTime':'', ' ': ''})]) %}
+            {% endif %}
+        {% endfor %}
+
+        {% set trUserCreatedAt = app.user.createdAt %}
+        {% if trUserCreatedAt %}
+            {% set trUserCreatedAt = app.user.createdAt|date("d/m/Y") %}
+        {% endif %}
+
+    {% endif %}
+
+{% endif %}
+
+
+{% set dataLayerData = {
+        'user_logged': userIsLogged,
+        'client_id': app.user.customer.id|default('unknown'),
+        'client_user_nb': clientUsersNb,
+        'user_id': app.user.id|default('unknown'),
+        'user_TR_rights' : userHasRightsOnTR,
+        'TR_user_role' : trUserRoles|join('/'),
+        'TR_user_creation_date' : trUserCreatedAt
     }
+%}
+
+<script type="text/javascript">
+  if (typeof dataLayer !== 'undefined') {
+    dataLayer.push({{ dataLayerData|json_encode()|raw }});
+  }
 </script>
+{% endspaceless %}
