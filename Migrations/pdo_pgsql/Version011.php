@@ -8,9 +8,9 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 /**
  * Adding created_at column in public.t_user_usr table
  */
-class Version001 extends AbstractMigration
+class Version011 extends AbstractMigration
 {
-    const VERSION = '0.1.1';
+    const VERSION = '0.11.1';
 
     public function getName()
     {
