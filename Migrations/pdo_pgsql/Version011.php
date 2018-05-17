@@ -10,7 +10,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
  */
 class Version011 extends AbstractMigration
 {
-    const VERSION = '0.11.1';
+    const VERSION = '0.11.0';
 
     public function getName()
     {
