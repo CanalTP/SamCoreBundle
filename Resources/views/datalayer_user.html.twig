@@ -42,9 +42,9 @@
 }
 %}
 
-<script type="text/javascript">
-  if (typeof dataLayer !== 'undefined') {
-    dataLayer.push({{ dataLayerData|json_encode()|raw }});
-  }
+<script>
+  dataLayer = [
+    {{ dataLayerData|json_encode()|raw }}
+  ];
 </script>
 {% endspaceless %}
