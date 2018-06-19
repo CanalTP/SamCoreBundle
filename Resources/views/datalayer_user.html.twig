@@ -1,9 +1,9 @@
 {% spaceless %}
 {% set userHasRightsOnTR = 'non' %}
 {% set userIsLogged = 'non' %}
-{% set clientUsersNb = 'unknown' %}
+{% set clientUsersNb = '' %}
 {% set trUserRoles = [] %}
-{% set trUserCreatedAt = 'unknown' %}
+{% set trUserCreatedAt = '' %}
 
 {% if app.user %}
     {% set userIsLogged = 'oui' %}
@@ -32,19 +32,19 @@
 
 
 {% set dataLayerData = {
-        'user_logged': userIsLogged,
-        'client_id': app.user.customer.id|default('unknown'),
-        'client_user_nb': clientUsersNb,
-        'user_id': app.user.id|default('unknown'),
-        'user_TR_rights' : userHasRightsOnTR,
-        'TR_user_role' : trUserRoles|join('/'),
-        'TR_user_creation_date' : trUserCreatedAt
-    }
+    'user_logged': userIsLogged,
+    'client_id': app.user.customer.id|default(''),
+    'client_user_nb': clientUsersNb,
+    'user_id': app.user.id|default(''),
+    'user_TR_rights' : userHasRightsOnTR,
+    'TR_user_role' : trUserRoles|join('/'),
+    'TR_user_creation_date' : trUserCreatedAt
+}
 %}
 
-<script type="text/javascript">
-  if (typeof dataLayer !== 'undefined') {
-    dataLayer.push({{ dataLayerData|json_encode()|raw }});
-  }
+<script>
+  dataLayer = [
+    {{ dataLayerData|json_encode()|raw }}
+  ];
 </script>
 {% endspaceless %}
