@@ -55,7 +55,7 @@ EOT
         $this->runCommand('doctrine:database:create', array(), $output);
 
         $applicationFinder = $this->getContainer()->get('canal_tp_sam.application.finder');
-        $applications = $applicationFinder->getBridgeApplicationBundles();
+        $applications = $applicationFinder->getApplicationBundles();
         // Create tables for each aplications
         foreach ($applications as $application) {
             $this->runCommand('claroline:migration:upgrade', array('bundle' => $application['bundle'], '--target' => 'farthest'), $output);
