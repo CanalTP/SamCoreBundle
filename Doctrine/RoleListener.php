@@ -3,21 +3,15 @@
 namespace CanalTP\SamCoreBundle\Doctrine;
 
 use CanalTP\SamCoreBundle\Entity\Role;
+use CanalTP\SamCoreBundle\Slugify;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
 class RoleListener
 {
-    private $slugify;
-
-    public function __construct($slugify)
-    {
-        $this->slugify = $slugify;
-    }
-
     private function canonicalize(Role $role)
     {
-        $slug = $this->slugify->slugify($role->getName(), '_');
+        $slug = Slugify::format($role->getName(), '_');
 
         return 'ROLE_' . strtoupper($slug);
     }

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use CanalTP\SamCoreBundle\Entity\Application;
+use CanalTP\SamCoreBundle\Slugify;
 
 /**
  * Customer
@@ -141,9 +142,7 @@ class Customer extends AbstractEntity implements CustomerInterface
      */
     protected function setNameCanonical($name)
     {
-        $slug = new \CanalTP\SamCoreBundle\Slugify();
-
-        $this->nameCanonical = $slug->slugify($name);
+        $this->nameCanonical = Slugify::format($name);
 
         return $this;
     }

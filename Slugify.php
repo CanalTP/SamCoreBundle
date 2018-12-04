@@ -4,7 +4,7 @@ namespace CanalTP\SamCoreBundle;
 
 class Slugify
 {
-    public function slugify($text, $separator = '-')
+    public static function format($text, $separator = '-')
     {
         // replace non letter or digits by -
         $text = preg_replace('~[^\\pL\d]+~u', $separator, $text);
