@@ -60,6 +60,7 @@ class CustomerRepository extends EntityRepository
             ->join('c.applications', 'ca')
             ->where('ca.application = :appId')
             ->andWhere('ca.isActive = true')
+            ->andWhere('c.locked = false')
             ->setParameter('appId', $applicationId);
 
         return $qb->getQuery()->getResult();
