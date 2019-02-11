@@ -35,8 +35,8 @@ class CustomerRepository extends EntityRepository
     public function disableTokens($customer, Application $application = null)
     {
         $queryText = 'UPDATE CanalTPSamCoreBundle:CustomerApplication c '
-                . 'SET c.isActive = false '
-                . 'WHERE c.customer=:customer';
+            . 'SET c.isActive = false '
+            . 'WHERE c.customer=:customer';
 
 
         if (!is_null($application)) {
@@ -60,6 +60,7 @@ class CustomerRepository extends EntityRepository
             ->join('c.applications', 'ca')
             ->where('ca.application = :appId')
             ->andWhere('ca.isActive = true')
+            ->andWhere('c.locked = false')
             ->setParameter('appId', $applicationId);
 
         return $qb->getQuery()->getResult();
