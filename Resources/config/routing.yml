@@ -1,6 +1,3 @@
-sam_business_app:
-    resource: "@CanalTPSamCoreBundle/Resources/config/routing_app.yml"
-
 sam_security:
     resource: "@CanalTPSamEcoreSecurityBundle/Resources/config/routing.yml"
 
