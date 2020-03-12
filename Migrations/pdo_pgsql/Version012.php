@@ -25,9 +25,10 @@ class Version012 extends AbstractMigration
     public function up(Schema $schema)
     {
         $sql = 'ALTER TABLE public.t_user_usr ';
-        $sql.= 'ADD COLUMN usr_delete_time timestamp(0) without time zone DEFAULT NULL::timestamp without time zone';
+        $sql.= 'ADD COLUMN usr_deletion_date timestamp(0) without time zone DEFAULT NULL::timestamp without time zone';
 
         $this->addSql($sql);
+        $this->addSql('comment on column public.t_user_usr.usr_deletion_date is \'Date when this record will be deleted (GDPR)\';');
     }
 
     /**
@@ -37,6 +38,6 @@ class Version012 extends AbstractMigration
      */
     public function down(Schema $schema)
     {
-        $this->addSql('ALTER TABLE public.t_user_usr DROP COLUMN usr_delete_time');
+        $this->addSql('ALTER TABLE public.t_user_usr DROP COLUMN usr_deletion_date');
     }
 }
