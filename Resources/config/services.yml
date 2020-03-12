@@ -54,3 +54,6 @@ services:
     sam_core.customer.application.transformer:
         class: %sam_core.customer.application.transformer.class%
         arguments: ['@doctrine.orm.entity_manager', '@navitia_token_manager']
+    sam.gdpr:
+        class: CanalTP\SamCoreBundle\Services\Gdpr
+        arguments: ['@doctrine.orm.entity_manager', '@logger']
