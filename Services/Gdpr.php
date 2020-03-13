@@ -2,8 +2,9 @@
 
 namespace CanalTP\SamCoreBundle\Services;
 
-use Doctrine\Common\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Doctrine\Common\Persistence\ObjectManager;
 use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 
 class Gdpr
@@ -22,19 +23,36 @@ class Gdpr
      */
     private $logger;
 
-    public function __construct(ObjectManager $om, LoggerInterface $logger)
-    {
+    /**
+     * @var TwigEngine
+     */
+    private $templating;
+
+    /**
+     * @var \Swift_Mailer
+     */
+    private $mailer;
+
+    public function __construct(
+        ObjectManager $om,
+        LoggerInterface $logger,
+        TwigEngine $templating,
+        \Swift_Mailer $mailer
+    ) {
         $this->om = $om;
         $this->logger = $logger;
+        $this->templating = $templating;
+        $this->mailer = $mailer;
     }
 
     public function run()
     {
         $incativeUsers = $this->getIncativeUsers();
-        $this->logger->info(sprintf('Found %d inactive users.', count($incativeUsers)));
+        $this->logger->info(sprintf('Found %d inactive users', count($incativeUsers)));
         foreach ($incativeUsers as $user) {
             $this->handleIncativeUser($user);
         }
+
         return $incativeUsers;
     }
 
@@ -43,7 +61,9 @@ class Gdpr
         $now = new \DateTime();
         $interval = new \DateInterval('P' . self::INCATIVITY_INTERNAL);
         $lastLoginDate = $now->sub($interval);
-        return $this->om->getRepository('CanalTPSamEcoreUserManagerBundle:User')
+
+        return $this->om
+            ->getRepository('CanalTPSamEcoreUserManagerBundle:User')
             ->getIncativeUsersSince($lastLoginDate);
     }
 
@@ -64,8 +84,14 @@ class Gdpr
             $user->setDeletionDate($deletionDate);
             $this->om->persist($user);
             //$this->om->flush();
-            $pattern = 'Client %s: User ID %s: deletion date has been set to %s';
-            $this->logger->info(sprintf($pattern, $user->getCustomer()->getName(), $user->getId(), $deletionDate->format('c')));
+            $this->logger->info(
+                sprintf(
+                    'Client %s: User ID %s: deletion date has been set to %s',
+                    $user->getCustomer()->getName(),
+                    $user->getId(),
+                    $deletionDate->format('c')
+                )
+            );
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
@@ -73,6 +99,31 @@ class Gdpr
 
     private function sendNotificationMail(User $user, \DateTime $deletionDate)
     {
-        return true;
+        $to = $user->getEmailCanonical();
+        $this->logger->debug('Sending email to ' . $to);
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject('subject')
+            ->setFrom('info@kisiodigital.com')
+            ->setTo($to)
+            ->setReplyTo('noreply@kisiodigital.com')
+            ->setContentType('text/html')
+            ->setBody($this->templating->render('CanalTPSamCoreBundle:Email:gdpr_warning.html.twig', [
+                'user' => $user
+            ]));
+
+        $result = $this->mailer->send($message);
+
+        if ($result === 0) {
+            throw new \RuntimeException('Unable to send email to ' . $to);
+        }
+
+        $msg = sprintf(
+            'Client %s: User ID %s: alert email has been sent',
+            $user->getCustomer()->getName(),
+            $user->getId()
+        );
+
+        $this->logger->info($msg);
     }
 }

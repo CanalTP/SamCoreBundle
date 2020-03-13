@@ -56,4 +56,4 @@ services:
         arguments: ['@doctrine.orm.entity_manager', '@navitia_token_manager']
     sam.gdpr:
         class: CanalTP\SamCoreBundle\Services\Gdpr
-        arguments: ['@doctrine.orm.entity_manager', '@logger']
+        arguments: ['@doctrine.orm.entity_manager', '@logger', '@templating', '@mailer']
