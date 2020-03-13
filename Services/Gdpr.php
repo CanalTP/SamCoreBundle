@@ -5,6 +5,7 @@ namespace CanalTP\SamCoreBundle\Services;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\HttpFoundation\RequestStack;
 use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 
 class Gdpr
@@ -83,7 +84,7 @@ class Gdpr
             $this->sendNotificationMail($user, $deletionDate);
             $user->setDeletionDate($deletionDate);
             $this->om->persist($user);
-            //$this->om->flush();
+            $this->om->flush();
             $this->logger->info(
                 sprintf(
                     'Client %s: User ID %s: deletion date has been set to %s',
@@ -109,7 +110,8 @@ class Gdpr
             ->setReplyTo('noreply@kisiodigital.com')
             ->setContentType('text/html')
             ->setBody($this->templating->render('CanalTPSamCoreBundle:Email:gdpr_warning.html.twig', [
-                'user' => $user
+                'user' => $user,
+                'deletionDate' => $deletionDate
             ]));
 
         $result = $this->mailer->send($message);

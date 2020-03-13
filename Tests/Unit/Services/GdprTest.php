@@ -35,19 +35,38 @@ class GdprTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param array $users
+     * @param int $nbUpdatedRecords
+     * @param array $expectedDelDates
      * @param array $expectedLogMessages
      *
      * @dataProvider runDataProvider
      *
      */
-    public function testRun($users, $expectedLogMessages)
+    public function testRun($users, $nbUpdatedRecords, $expectedDelDates, $expectedLogMessages)
     {
         $this->users = $users;
-        $this->gdpr = new Gdpr($this->mockEntityManager(), $this->logger, $this->mockTemplating(), $this->mockMailer());
+        $this->gdpr = new Gdpr(
+            $this->mockEntityManager($nbUpdatedRecords),
+            $this->logger,
+            $this->mockTemplating(),
+            $this->mockMailer()
+        );
+
         $this->gdpr->run();
 
+        //check logs
         foreach ($expectedLogMessages as $expectedLogMessage) {
             $this->assertLogMessageExists($expectedLogMessage['msg'], $expectedLogMessage['level']);
+        }
+
+        //check that user deletion date is altered
+        foreach ($this->users as $user) {
+            $this->assertArrayHasKey($user->getId(), $expectedDelDates);
+
+            $this->assertEquals(
+                $this->getUserDeletionDate($user)->format('Y-m-d h:'),
+                $expectedDelDates[$user->getId()]->format('Y-m-d h:')
+            );
         }
     }
 
@@ -60,6 +79,8 @@ class GdprTest extends \PHPUnit_Framework_TestCase
         return [
             [
                 [],
+                0,
+                [],
                 [
                     ['msg' => 'Found 0 inactive users', 'level' => Logger::INFO]
                 ]
@@ -68,6 +89,8 @@ class GdprTest extends \PHPUnit_Framework_TestCase
                 [
                     $this->mockUser(1, null)
                 ],
+                1,
+                [1 => $delDate],
                 [
                     [
                         'msg' => 'Found 1 inactive users',
@@ -84,6 +107,14 @@ class GdprTest extends \PHPUnit_Framework_TestCase
                 ]
             ],
         ];
+    }
+
+    private function getUserDeletionDate($user)
+    {
+        $property = new \ReflectionProperty(get_class($user), 'deletionDate');
+        $property->setAccessible(true);
+
+        return $property->getValue($user);
     }
 
     private function mockUser($id, $deletionDate)
@@ -122,7 +153,7 @@ class GdprTest extends \PHPUnit_Framework_TestCase
      *
      * @return \Doctrine\ORM\EntityManager
      */
-    protected function mockEntityManager()
+    protected function mockEntityManager($nbUpdatedRecords)
     {
         $mock = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
@@ -132,6 +163,14 @@ class GdprTest extends \PHPUnit_Framework_TestCase
         $mock
             ->method('getRepository')
             ->willReturnCallback([$this, 'getRepositoryMock']);
+
+        $mock
+            ->expects($this->exactly($nbUpdatedRecords))
+            ->method('persist');
+
+        $mock
+            ->expects($this->exactly($nbUpdatedRecords))
+            ->method('flush');
 
         return $mock;
     }
