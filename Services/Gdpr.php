@@ -2,6 +2,7 @@
 
 namespace CanalTP\SamCoreBundle\Services;
 
+use Psr\Log\LogLevel;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -10,7 +11,7 @@ use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 
 class Gdpr
 {
-    const INCATIVITY_INTERNAL = '5D';
+    const INCATIVITY_INTERVAL = '5D';
 
     const DELETING_AFTER = '1D';
 
@@ -60,7 +61,7 @@ class Gdpr
     private function getIncativeUsers()
     {
         $now = new \DateTime();
-        $interval = new \DateInterval('P' . self::INCATIVITY_INTERNAL);
+        $interval = new \DateInterval('P' . self::INCATIVITY_INTERVAL);
         $lastLoginDate = $now->sub($interval);
 
         return $this->om
@@ -72,6 +73,8 @@ class Gdpr
     {
         if (!$user->getDeletionDate()) {
             $this->notifyUser($user);
+        } else {
+            $this->handelNotifiedUser($user);
         }
     }
 
@@ -85,14 +88,9 @@ class Gdpr
             $user->setDeletionDate($deletionDate);
             $this->om->persist($user);
             $this->om->flush();
-            $this->logger->info(
-                sprintf(
-                    'Client %s: User ID %s: deletion date has been set to %s',
-                    $user->getCustomer()->getName(),
-                    $user->getId(),
-                    $deletionDate->format('c')
-                )
-            );
+
+            $msg = 'deletion date has been set to '. $deletionDate->format('c');
+            $this->logActionOnUser($user, $msg, LogLevel::INFO);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
         }
@@ -120,12 +118,48 @@ class Gdpr
             throw new \RuntimeException('Unable to send email to ' . $to);
         }
 
+        $this->logActionOnUser($user, 'alert email has been sent', LogLevel::INFO);
+    }
+
+    private function handelNotifiedUser(User $user)
+    {
+        if (!$this->shouldBeDeleted($user)) {
+            $this->logActionOnUser($user, 'no deletion', LogLevel::INFO);
+            return;
+        }
+
+        $this->deleteUser($user);
+    }
+
+    private function shouldBeDeleted(User $user)
+    {
+        if ($user->hasRole('ROLE_SUPER_ADMIN')) {
+            return false;
+        }
+
+        $now = new \DateTime();
+
+        if ($now > $user->getDeletionDate()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private function deleteUser(User $user)
+    {
+        $this->logActionOnUser($user, 'should be deleted', LogLevel::INFO);
+    }
+
+    private function logActionOnUser(User $user, $message, $level)
+    {
         $msg = sprintf(
-            'Client %s: User ID %s: alert email has been sent',
+            'Client %s: User ID %s: %s ',
             $user->getCustomer()->getName(),
-            $user->getId()
+            $user->getId(),
+            $message
         );
 
-        $this->logger->info($msg);
+        $this->logger->log($level, $msg);
     }
 }
