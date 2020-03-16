@@ -54,6 +54,15 @@ services:
     sam_core.customer.application.transformer:
         class: %sam_core.customer.application.transformer.class%
         arguments: ['@doctrine.orm.entity_manager', '@navitia_token_manager']
-    sam.gdpr:
-        class: CanalTP\SamCoreBundle\Services\Gdpr
+
+    sam.gdpr.handler:
+        class: CanalTP\SamCoreBundle\Services\GDPR\Handler
+        arguments: ['@doctrine.orm.entity_manager', '@logger', '@service_container']
+
+    sam.gdpr.warning.notifier:
+        class: CanalTP\SamCoreBundle\Services\GDPR\WarningNotifier
+        arguments: ['@doctrine.orm.entity_manager', '@logger', '@templating', '@mailer']
+
+    sam.gdpr.deletion.notifier:
+        class: CanalTP\SamCoreBundle\Services\GDPR\DeletionNotifier
         arguments: ['@doctrine.orm.entity_manager', '@logger', '@templating', '@mailer']

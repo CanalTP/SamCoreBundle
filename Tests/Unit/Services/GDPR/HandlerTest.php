@@ -4,16 +4,16 @@ namespace CanalTP\SamCoreBundle\Tests\Unit\Services;
 
 use Monolog\Logger;
 use Monolog\Handler\TestHandler;
-use CanalTP\SamCoreBundle\Services\Gdpr;
+use CanalTP\SamCoreBundle\Services\GDPR\Handler as GdprHandler;
 use CanalTP\SamCoreBundle\Entity\Customer;
 use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 
-class GdprTest extends \PHPUnit_Framework_TestCase
+class HandlerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var Gdpr
+     * @var GdprHandler
      */
-    private $gdpr;
+    private $gdprHandler;
     /**
      * @var Logger
      */
@@ -45,14 +45,14 @@ class GdprTest extends \PHPUnit_Framework_TestCase
     public function testRun($users, $nbUpdatedRecords, $expectedDelDates, $expectedLogMessages)
     {
         $this->users = $users;
-        $this->gdpr = new Gdpr(
+        $this->gdprHandler = new GdprHandler(
             $this->mockEntityManager($nbUpdatedRecords),
             $this->logger,
             $this->mockTemplating(),
             $this->mockMailer()
         );
 
-        $this->gdpr->run();
+        $this->gdprHandler->run();
 
         //check logs
         foreach ($expectedLogMessages as $expectedLogMessage) {

@@ -32,7 +32,7 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $service = $this->getContainer()->get('sam.gdpr');
+        $service = $this->getContainer()->get('sam.gdpr.handler');
         $service->run();
     }
 }
