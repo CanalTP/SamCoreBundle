@@ -23,7 +23,7 @@ class GdprTestCase extends UnitTestCase
 
         $user = $this->getMockBuilder(User::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getId', 'getDeletionDate', 'getCustomer'])
+            ->setMethods(['getId', 'getDeletionDate', 'getCustomer', 'hasRole'])
             ->getMock();
 
         $user
@@ -37,6 +37,10 @@ class GdprTestCase extends UnitTestCase
         $user
             ->method('getCustomer')
             ->willReturn($customer);
+
+        $user
+            ->method('hasRole')
+            ->willReturnCallback([$this, 'userHasRole']);
 
         return $user;
     }
@@ -69,5 +73,24 @@ class GdprTestCase extends UnitTestCase
             ->willReturn(true);
 
         return $mock;
+    }
+
+    protected function mockMailer()
+    {
+        $mailer = $this->getMockBuilder('\Swift_Mailer')
+            ->disableOriginalConstructor()
+            ->setMethods(['send'])
+            ->getMock();
+
+        $mailer
+            ->method('send')
+            ->willReturn(true);
+
+        return $mailer;
+    }
+
+    public function userHasRole($role)
+    {
+        return false;
     }
 }

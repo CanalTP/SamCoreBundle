@@ -10,15 +10,6 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
 
 class WarningNotifier extends Notifier implements HandlerInterface
 {
-    public function __construct(
-        ObjectManager $om,
-        LoggerInterface $logger,
-        TwigEngine $templating,
-        \Swift_Mailer $mailer
-    ) {
-        parent::__construct($om, $logger, $templating, $mailer);
-    }
-
     public function handle(User $user)
     {
         if ($this->userIsSuperAdmin($user)) {
