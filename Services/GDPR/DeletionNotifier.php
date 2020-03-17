@@ -10,10 +10,10 @@ class DeletionNotifier extends Notifier implements HandlerInterface
     public function handle(User $user)
     {
         if (!$this->shouldBeDeleted($user)) {
-            return;
+            return false;
         }
 
-        $this->deleteUser($user);
+        return $this->deleteUser($user);
     }
 
     private function shouldBeDeleted(User $user)
@@ -35,6 +35,7 @@ class DeletionNotifier extends Notifier implements HandlerInterface
 
     private function deleteUser(User $user)
     {
+
         try {
             $this->sendDeletionMail($user);
             $this->om->remove($user);
@@ -42,7 +43,10 @@ class DeletionNotifier extends Notifier implements HandlerInterface
             $this->logActionOnUser($user, 'account has been deleted', LogLevel::INFO);
         } catch (\Exception $e) {
             $this->logActionOnUser($user, $e->getMessage(), LogLevel::ERROR);
+            return false;
         }
+
+        return true;
     }
 
     private function sendDeletionMail(User $user)

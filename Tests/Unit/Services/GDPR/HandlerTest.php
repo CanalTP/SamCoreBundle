@@ -3,25 +3,18 @@
 namespace CanalTP\SamCoreBundle\Tests\Unit\Services;
 
 use Monolog\Logger;
-use Monolog\Handler\TestHandler;
 use CanalTP\SamCoreBundle\Services\GDPR\Handler as GdprHandler;
 use CanalTP\SamCoreBundle\Entity\Customer;
+use CanalTP\SamCoreBundle\Tests\Unit\UnitTestCase;
 use CanalTP\SamEcoreUserManagerBundle\Entity\User;
+use CanalTP\SamCoreBundle\Services\GDPR\WarningNotifier;
 
-class HandlerTest extends \PHPUnit_Framework_TestCase
+class HandlerTest extends UnitTestCase
 {
     /**
      * @var GdprHandler
      */
     private $gdprHandler;
-    /**
-     * @var Logger
-     */
-    protected $logger;
-    /**
-     * @var TestHandler
-     */
-    protected $logHandler;
 
     /**
      * @var array
@@ -33,41 +26,50 @@ class HandlerTest extends \PHPUnit_Framework_TestCase
         $this->initLogger();
     }
 
+    public function testConstant()
+    {
+        $this->assertEquals('5D', GdprHandler::INACTIVITY_INTERVAL);
+    }
     /**
      * @param array $users
-     * @param int $nbUpdatedRecords
-     * @param array $expectedDelDates
-     * @param array $expectedLogMessages
+     * @param int $expectedAffectedUsers
      *
      * @dataProvider runDataProvider
      *
      */
-    public function testRun($users, $nbUpdatedRecords, $expectedDelDates, $expectedLogMessages)
+    public function testRun($users, $expectedAffectedUsers)
     {
         $this->users = $users;
+
         $this->gdprHandler = new GdprHandler(
-            $this->mockEntityManager($nbUpdatedRecords),
+            $this->mockEntityManager(0),
             $this->logger,
-            $this->mockTemplating(),
-            $this->mockMailer()
+            $this->mockContainer()
         );
 
-        $this->gdprHandler->run();
+        $affectedUsers = $this->gdprHandler->run();
+
+        $this->assertEquals($expectedAffectedUsers, $affectedUsers);
+
+        $expectedLogMessage = 'Found '. $expectedAffectedUsers .' inactive users';
 
         //check logs
-        foreach ($expectedLogMessages as $expectedLogMessage) {
-            $this->assertLogMessageExists($expectedLogMessage['msg'], $expectedLogMessage['level']);
-        }
+        $this->assertLogMessageExists($expectedLogMessage, Logger::INFO);
+    }
 
-        //check that user deletion date is altered
-        foreach ($this->users as $user) {
-            $this->assertArrayHasKey($user->getId(), $expectedDelDates);
+    protected function getSamGdprWarningNotifierMock()
+    {
+        $mock = $this->getMockBuilder(WarningNotifier::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['handle'])
+            ->getMock();
 
-            $this->assertEquals(
-                $this->getUserDeletionDate($user)->format('Y-m-d h:'),
-                $expectedDelDates[$user->getId()]->format('Y-m-d h:')
-            );
-        }
+        $mock
+            ->expects($this->once())
+            ->method('handle')
+            ->willReturn(true);
+
+        return $mock;
     }
 
     public function runDataProvider()
@@ -77,44 +79,9 @@ class HandlerTest extends \PHPUnit_Framework_TestCase
         $delDate = $now->add($interval);
 
         return [
-            [
-                [],
-                0,
-                [],
-                [
-                    ['msg' => 'Found 0 inactive users', 'level' => Logger::INFO]
-                ]
-            ],
-            [
-                [
-                    $this->mockUser(1, null)
-                ],
-                1,
-                [1 => $delDate],
-                [
-                    [
-                        'msg' => 'Found 1 inactive users',
-                        'level' => Logger::INFO
-                    ],
-                    [
-                        'msg' => 'Client test: User ID 1: deletion date has been set to ' . $delDate->format('Y-m-d'),
-                        'level' => Logger::INFO
-                    ],
-                    [
-                        'msg' => 'Client test: User ID 1: alert email has been sent',
-                        'level' => Logger::INFO
-                    ],
-                ]
-            ],
+            [[],                                            0],
+            [[$this->mockUser(1, null)],     1],
         ];
-    }
-
-    private function getUserDeletionDate($user)
-    {
-        $property = new \ReflectionProperty(get_class($user), 'deletionDate');
-        $property->setAccessible(true);
-
-        return $property->getValue($user);
     }
 
     private function mockUser($id, $deletionDate)
@@ -146,97 +113,6 @@ class HandlerTest extends \PHPUnit_Framework_TestCase
             ->willReturn($customer);
 
         return $user;
-    }
-
-    /**
-     * Stubs entity manager
-     *
-     * @return \Doctrine\ORM\EntityManager
-     */
-    protected function mockEntityManager($nbUpdatedRecords)
-    {
-        $mock = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
-            ->disableOriginalConstructor()
-            ->setMethods(['persist', 'flush', 'getRepository'])
-            ->getMock();
-
-        $mock
-            ->method('getRepository')
-            ->willReturnCallback([$this, 'getRepositoryMock']);
-
-        $mock
-            ->expects($this->exactly($nbUpdatedRecords))
-            ->method('persist');
-
-        $mock
-            ->expects($this->exactly($nbUpdatedRecords))
-            ->method('flush');
-
-        return $mock;
-    }
-
-    /**
-     * Initializes PSR logger
-     */
-    protected function initLogger()
-    {
-        $this->logger = new Logger('gdpr');
-        $this->logHandler = new TestHandler();
-        $this->logger->pushHandler($this->logHandler);
-    }
-
-    /**
-     * Asserts that message is logged
-     *
-     * @param string $message log message
-     * @param integer $level log level
-     */
-    protected function assertLogMessageExists($message, $level)
-    {
-        $recordIsFound = $this->logHandler->hasRecordThatContains($message, $level);
-        $this->assertTrue($recordIsFound, $message . ' with level ' . $level . ' could not found in logger');
-    }
-
-    protected function mockMailer()
-    {
-        $mailer = $this->getMockBuilder('\Swift_Mailer')
-            ->disableOriginalConstructor()
-            ->setMethods(['send'])
-            ->getMock();
-
-        $mailer
-            ->method('send')
-            ->willReturn(true);
-
-        return $mailer;
-    }
-
-    protected function mockTemplating()
-    {
-        $mailer = $this->getMockBuilder('\Symfony\Bundle\TwigBundle\TwigEngine')
-            ->disableOriginalConstructor()
-            ->setMethods(['render'])
-            ->getMock();
-
-        $mailer
-            ->method('render')
-            ->willReturn('abcd');
-
-        return $mailer;
-    }
-
-    /**
-     * Retrieves correct mock object for $repositoryName
-     *
-     * @param string $repositoryName
-     * @param array $args
-     * @return mixed
-     */
-    public function getRepositoryMock($repositoryName)
-    {
-        $methodName = 'get' . str_replace([':', '\\'], '', $repositoryName) . 'Mock';
-
-        return $this->$methodName();
     }
 
     public function getCanalTPSamEcoreUserManagerBundleUserMock()

@@ -35,13 +35,18 @@ class Handler
 
     public function run()
     {
+        $affectedUsers = 0;
+
         $inactiveUsers = $this->getInactiveUsers();
         $this->logger->info(sprintf('Found %d inactive users', count($inactiveUsers)));
         foreach ($inactiveUsers as $user) {
-            $this->handleInactiveUser($user);
+            $hasBeenHandled = $this->handleInactiveUser($user);
+            if ($hasBeenHandled) {
+                $affectedUsers++;
+            }
         }
 
-        return $inactiveUsers;
+        return $affectedUsers;
     }
 
     private function getInactiveUsers()

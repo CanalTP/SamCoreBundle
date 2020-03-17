@@ -2,16 +2,28 @@
 
 namespace CanalTP\SamCoreBundle\Services\GDPR;
 
+use Doctrine\Common\Persistence\ObjectManager;
+use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use CanalTP\SamEcoreUserManagerBundle\Entity\User;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 
 class WarningNotifier extends Notifier implements HandlerInterface
 {
+    public function __construct(
+        ObjectManager $om,
+        LoggerInterface $logger,
+        TwigEngine $templating,
+        \Swift_Mailer $mailer
+    ) {
+        parent::__construct($om, $logger, $templating, $mailer);
+    }
+
     public function handle(User $user)
     {
         if ($this->userIsSuperAdmin($user)) {
             $this->logActionOnUser($user, 'no action, user is super admin', LogLevel::INFO);
-            return;
+            return false;
         }
 
         $now = new \DateTime();
@@ -27,7 +39,10 @@ class WarningNotifier extends Notifier implements HandlerInterface
             $this->logActionOnUser($user, $msg, LogLevel::INFO);
         } catch (\Exception $e) {
             $this->logActionOnUser($user, $e->getMessage(), LogLevel::ERROR);
+            return false;
         }
+
+        return true;
     }
 
     private function sendNotificationMail(User $user, \DateTime $deletionDate)
