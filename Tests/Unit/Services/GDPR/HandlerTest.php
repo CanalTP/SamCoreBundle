@@ -4,12 +4,9 @@ namespace CanalTP\SamCoreBundle\Tests\Unit\Services;
 
 use Monolog\Logger;
 use CanalTP\SamCoreBundle\Services\GDPR\Handler as GdprHandler;
-use CanalTP\SamCoreBundle\Entity\Customer;
-use CanalTP\SamCoreBundle\Tests\Unit\UnitTestCase;
 use CanalTP\SamEcoreUserManagerBundle\Entity\User;
-use CanalTP\SamCoreBundle\Services\GDPR\WarningNotifier;
 
-class HandlerTest extends UnitTestCase
+class HandlerTest extends GdprTestCase
 {
     /**
      * @var GdprHandler
@@ -57,21 +54,6 @@ class HandlerTest extends UnitTestCase
         $this->assertLogMessageExists($expectedLogMessage, Logger::INFO);
     }
 
-    protected function getSamGdprWarningNotifierMock()
-    {
-        $mock = $this->getMockBuilder(WarningNotifier::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['handle'])
-            ->getMock();
-
-        $mock
-            ->expects($this->once())
-            ->method('handle')
-            ->willReturn(true);
-
-        return $mock;
-    }
-
     public function runDataProvider()
     {
         $now = new \DateTime();
@@ -79,40 +61,10 @@ class HandlerTest extends UnitTestCase
         $delDate = $now->add($interval);
 
         return [
-            [[],                                            0],
-            [[$this->mockUser(1, null)],     1],
+            [[],                                         0],
+            [[$this->mockUser(1, null)], 1],
+            [[$this->mockUser(1, $delDate)],         1],
         ];
-    }
-
-    private function mockUser($id, $deletionDate)
-    {
-        $customer = $this->getMockBuilder(Customer::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getName'])
-            ->getMock();
-
-        $customer
-            ->method('getName')
-            ->willReturn('test');
-
-        $user = $this->getMockBuilder(User::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getId', 'getDeletionDate', 'getCustomer'])
-            ->getMock();
-
-        $user
-            ->method('getId')
-            ->willReturn($id);
-
-        $user
-            ->method('getDeletionDate')
-            ->willReturn($deletionDate);
-
-        $user
-            ->method('getCustomer')
-            ->willReturn($customer);
-
-        return $user;
     }
 
     public function getCanalTPSamEcoreUserManagerBundleUserMock()
