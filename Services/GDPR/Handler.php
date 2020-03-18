@@ -9,7 +9,7 @@ use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 
 class Handler
 {
-    const INACTIVITY_INTERVAL = '5D';
+    const INACTIVITY_INTERVAL = '5M';
 
     /**
      * @var ObjectManager

@@ -16,7 +16,7 @@ class DeletionNotifierTest extends GdprTestCase
 
     public function testConstants()
     {
-        $this->assertEquals('1D', DeletionNotifier::DELETING_AFTER);
+        $this->assertEquals('1M', DeletionNotifier::DELETING_AFTER);
     }
 
     public function testHandleWithSuperAdmin()
@@ -92,20 +92,10 @@ class DeletionNotifierTest extends GdprTestCase
         return $role === 'ROLE_SUPER_ADMIN' && $this->userIsSuperAdmin;
     }
 
-    private function generateDateInFuture()
+    private function generateDateInPast($pastInterval = '1M')
     {
         $now = new \DateTime();
-        $interval = new \DateInterval('P1D');
-
-        $delDate = $now->add($interval);
-
-        return $delDate;
-    }
-
-    private function generateDateInPast()
-    {
-        $now = new \DateTime();
-        $interval = new \DateInterval('P1D');
+        $interval = new \DateInterval('P'.$pastInterval);
 
         $delDate = $now->sub($interval);
 

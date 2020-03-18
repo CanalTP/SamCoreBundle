@@ -89,6 +89,16 @@ class GdprTestCase extends UnitTestCase
         return $mailer;
     }
 
+    protected function generateDateInFuture($afterInterval = '1M')
+    {
+        $now = new \DateTime();
+        $interval = new \DateInterval('P' . $afterInterval);
+
+        $delDate = $now->add($interval);
+
+        return $delDate;
+    }
+
     public function userHasRole($role)
     {
         return false;

@@ -10,7 +10,7 @@ use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 
 abstract class Notifier
 {
-    const DELETING_AFTER = '1D';
+    const DELETING_AFTER = '1M';
 
     /**
      * @var ObjectManager

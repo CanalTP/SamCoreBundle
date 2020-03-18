@@ -2,14 +2,13 @@
 
 namespace CanalTP\SamCoreBundle\Tests\Unit\Services\GDPR;
 
+use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 use CanalTP\SamCoreBundle\Services\GDPR\WarningNotifier;
 use CanalTP\SamCoreBundle\Tests\Unit\Services\GdprTestCase;
 
 class WarningNotifierTest extends GdprTestCase
 {
     private $userIsSuperAdmin = false;
-
-    private $notifier;
 
     protected function setUp()
     {
@@ -18,7 +17,7 @@ class WarningNotifierTest extends GdprTestCase
 
     public function testConstants()
     {
-        $this->assertEquals('1D', WarningNotifier::DELETING_AFTER);
+        $this->assertEquals('1M', WarningNotifier::DELETING_AFTER);
     }
 
     public function testHandleWithUsualUser()
@@ -33,6 +32,21 @@ class WarningNotifierTest extends GdprTestCase
         );
 
         $this->assertEquals(true, $notifier->handle($user));
+
+        $expectedDeletionDate = $this->generateDateInFuture();
+
+        $this->assertEquals(
+            $expectedDeletionDate->format('Y-m-d H:i'),
+            $this->getUserDeletionDate($user)->format('Y-m-d H:i')
+        );
+    }
+
+    private function getUserDeletionDate($user)
+    {
+        $reflectionClass = new \ReflectionClass(User::class);
+        $reflectionProperty = $reflectionClass->getProperty('deletionDate');
+        $reflectionProperty->setAccessible(true);
+        return $reflectionProperty->getValue($user);
     }
 
     public function testHandleWithSuperAdmin()

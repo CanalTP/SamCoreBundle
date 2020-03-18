@@ -25,7 +25,7 @@ class HandlerTest extends GdprTestCase
 
     public function testConstant()
     {
-        $this->assertEquals('5D', GdprHandler::INACTIVITY_INTERVAL);
+        $this->assertEquals('5M', GdprHandler::INACTIVITY_INTERVAL);
     }
     /**
      * @param array $users
@@ -57,7 +57,7 @@ class HandlerTest extends GdprTestCase
     public function runDataProvider()
     {
         $now = new \DateTime();
-        $interval = new \DateInterval('P1D');
+        $interval = new \DateInterval('P1M');
         $delDate = $now->add($interval);
 
         return [

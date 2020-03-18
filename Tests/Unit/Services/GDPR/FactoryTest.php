@@ -20,7 +20,7 @@ class FactoryTest extends GdprTestCase
     public function createDataProvider()
     {
         $now = new \DateTime();
-        $interval = new \DateInterval('P1D');
+        $interval = new \DateInterval('P1M');
         $delDate = $now->add($interval);
 
         return [
