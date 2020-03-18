@@ -66,11 +66,11 @@ class UnitTestCase extends \PHPUnit_Framework_TestCase
      *
      * @return \Doctrine\ORM\EntityManager
      */
-    protected function mockEntityManager($nbUpdatedRecords)
+    protected function mockEntityManager($nbUpdatedRecords, $nbSavedRecords)
     {
         $mock = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
-            ->setMethods(['persist', 'flush', 'getRepository'])
+            ->setMethods(['persist', 'flush', 'getRepository', 'remove'])
             ->getMock();
 
         $mock
@@ -82,8 +82,12 @@ class UnitTestCase extends \PHPUnit_Framework_TestCase
             ->method('persist');
 
         $mock
-            ->expects($this->exactly($nbUpdatedRecords))
+            ->expects($this->exactly($nbSavedRecords))
             ->method('flush');
+
+        $mock
+            ->method('remove')
+            ->willReturn(true);
 
         return $mock;
     }

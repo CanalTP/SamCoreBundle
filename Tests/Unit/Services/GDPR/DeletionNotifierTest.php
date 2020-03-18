@@ -2,14 +2,12 @@
 
 namespace CanalTP\SamCoreBundle\Tests\Unit\Services\GDPR;
 
-use CanalTP\SamCoreBundle\Services\GDPR\WarningNotifier;
+use CanalTP\SamCoreBundle\Services\GDPR\DeletionNotifier;
 use CanalTP\SamCoreBundle\Tests\Unit\Services\GdprTestCase;
 
-class WarningNotifierTest extends GdprTestCase
+class DeletionNotifierTest extends GdprTestCase
 {
     private $userIsSuperAdmin = false;
-
-    private $notifier;
 
     protected function setUp()
     {
@@ -18,29 +16,15 @@ class WarningNotifierTest extends GdprTestCase
 
     public function testConstants()
     {
-        $this->assertEquals('1D', WarningNotifier::DELETING_AFTER);
-    }
-
-    public function testHandleWithUsualUser()
-    {
-        $user = $this->mockUser(1, null);
-
-        $notifier = new WarningNotifier(
-            $this->mockEntityManager(1, 1),
-            $this->logger,
-            $this->mockTemplating(),
-            $this->mockMailer()
-        );
-
-        $this->assertEquals(true, $notifier->handle($user));
+        $this->assertEquals('1D', DeletionNotifier::DELETING_AFTER);
     }
 
     public function testHandleWithSuperAdmin()
     {
         $this->userIsSuperAdmin = true;
-        $user = $this->mockUser(1, null);
+        $user = $this->mockUser(1, $this->generateDateInFuture());
 
-        $notifier = new WarningNotifier(
+        $notifier = new DeletionNotifier(
             $this->mockEntityManager(0, 0),
             $this->logger,
             $this->mockTemplating(),
@@ -50,22 +34,34 @@ class WarningNotifierTest extends GdprTestCase
         $this->assertEquals(false, $notifier->handle($user));
     }
 
+    public function testHandleWithUsualUser()
+    {
+        $user = $this->mockUser(1, $this->generateDateInPast());
+
+        $notifier = new DeletionNotifier(
+            $this->mockEntityManager(0, 1),
+            $this->logger,
+            $this->mockTemplating(),
+            $this->mockMailer()
+        );
+
+        $this->assertEquals(true, $notifier->handle($user));
+    }
+
     public function testFlushImpossible()
     {
         $emMock = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
             ->disableOriginalConstructor()
-            ->setMethods(['persist', 'flush'])
+            ->setMethods(['remove'])
             ->getMock();
+
         $emMock
-            ->expects($this->exactly(1))
-            ->method('persist');
-        $emMock
-            ->method('flush')
+            ->method('remove')
             ->will($this->throwException(new \Exception('test')));
 
-        $notifier = new WarningNotifier($emMock, $this->logger, $this->mockTemplating(), $this->mockMailer());
+        $notifier = new DeletionNotifier($emMock, $this->logger, $this->mockTemplating(), $this->mockMailer());
 
-        $user = $this->mockUser(1, null);
+        $user = $this->mockUser(1, $this->generateDateInFuture());
         $this->assertEquals(false, $notifier->handle($user));
     }
 
@@ -80,19 +76,39 @@ class WarningNotifierTest extends GdprTestCase
             ->method('send')
             ->willReturn(0);
 
-        $notifier = new WarningNotifier(
+        $notifier = new DeletionNotifier(
             $this->mockEntityManager(0, 0),
             $this->logger,
             $this->mockTemplating(),
             $mailerMock
         );
 
-        $user = $this->mockUser(1, null);
+        $user = $this->mockUser(1, $this->generateDateInPast());
         $this->assertEquals(false, $notifier->handle($user));
     }
 
     public function userHasRole($role)
     {
         return $role === 'ROLE_SUPER_ADMIN' && $this->userIsSuperAdmin;
+    }
+
+    private function generateDateInFuture()
+    {
+        $now = new \DateTime();
+        $interval = new \DateInterval('P1D');
+
+        $delDate = $now->add($interval);
+
+        return $delDate;
+    }
+
+    private function generateDateInPast()
+    {
+        $now = new \DateTime();
+        $interval = new \DateInterval('P1D');
+
+        $delDate = $now->sub($interval);
+
+        return $delDate;
     }
 }

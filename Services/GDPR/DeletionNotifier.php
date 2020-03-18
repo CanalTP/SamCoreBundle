@@ -35,7 +35,6 @@ class DeletionNotifier extends Notifier implements HandlerInterface
 
     private function deleteUser(User $user)
     {
-
         try {
             $this->sendDeletionMail($user);
             $this->om->remove($user);

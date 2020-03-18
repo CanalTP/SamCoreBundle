@@ -39,7 +39,7 @@ class HandlerTest extends GdprTestCase
         $this->users = $users;
 
         $this->gdprHandler = new GdprHandler(
-            $this->mockEntityManager(0),
+            $this->mockEntityManager(0, 0),
             $this->logger,
             $this->mockContainer()
         );
@@ -77,9 +77,7 @@ class HandlerTest extends GdprTestCase
         $mock
             ->expects($this->any())
             ->method('getIncativeUsersSince')
-            ->willReturn(
-                $this->users
-            );
+            ->willReturn($this->users);
 
         return $mock;
     }
