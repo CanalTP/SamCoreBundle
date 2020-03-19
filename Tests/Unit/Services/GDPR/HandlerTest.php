@@ -23,10 +23,6 @@ class HandlerTest extends GdprTestCase
         $this->initLogger();
     }
 
-    public function testConstant()
-    {
-        $this->assertEquals('5M', GdprHandler::INACTIVITY_INTERVAL);
-    }
     /**
      * @param array $users
      * @param int $expectedAffectedUsers
@@ -48,7 +44,7 @@ class HandlerTest extends GdprTestCase
 
         $this->assertEquals($expectedAffectedUsers, $affectedUsers);
 
-        $expectedLogMessage = 'Found '. $expectedAffectedUsers .' inactive users';
+        $expectedLogMessage = 'Found '. $expectedAffectedUsers .' users';
 
         //check logs
         $this->assertLogMessageExists($expectedLogMessage, Logger::INFO);
@@ -71,12 +67,12 @@ class HandlerTest extends GdprTestCase
     {
         $mock = $this->getMockBuilder('\Doctrine\ORM\EntityRepository')
             ->disableOriginalConstructor()
-            ->setMethods(['getIncativeUsersSince'])
+            ->setMethods(['findAll'])
             ->getMock();
 
         $mock
             ->expects($this->any())
-            ->method('getIncativeUsersSince')
+            ->method('findAll')
             ->willReturn($this->users);
 
         return $mock;

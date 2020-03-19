@@ -1,11 +1,11 @@
 <?php
 
-namespace CanalTP\SamCoreBundle\Services\GDPR;
+namespace CanalTP\SamCoreBundle\Services\GDPR\Notifier;
 
 use Psr\Log\LogLevel;
 use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 
-class DeletionNotifier extends Notifier implements HandlerInterface
+class Deletion extends Notifier implements HandlerInterface
 {
     public function handle(User $user)
     {
@@ -18,11 +18,6 @@ class DeletionNotifier extends Notifier implements HandlerInterface
 
     private function shouldBeDeleted(User $user)
     {
-        if ($this->userIsSuperAdmin($user)) {
-            $this->logActionOnUser($user, 'no deletion : user is super admin', LogLevel::INFO);
-            return false;
-        }
-
         $now = new \DateTime();
 
         if ($now > $user->getDeletionDate()) {

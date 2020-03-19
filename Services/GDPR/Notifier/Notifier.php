@@ -1,6 +1,6 @@
 <?php
 
-namespace CanalTP\SamCoreBundle\Services\GDPR;
+namespace CanalTP\SamCoreBundle\Services\GDPR\Notifier;
 
 use Psr\Log\LogLevel;
 use Psr\Log\LoggerInterface;
@@ -10,8 +10,6 @@ use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 
 abstract class Notifier
 {
-    const DELETING_AFTER = '1M';
-
     /**
      * @var ObjectManager
      */
@@ -44,14 +42,8 @@ abstract class Notifier
         $this->mailer = $mailer;
     }
 
-    protected function userIsSuperAdmin(User $user)
-    {
-        return $user->hasRole('ROLE_SUPER_ADMIN');
-    }
-
     protected function logActionOnUser(User $user, $message, $level)
     {
-
         $msg = sprintf(
             'Client %s User ID %s %s ',
             str_pad($user->getCustomer()->getName() . ':', 20, ' '),

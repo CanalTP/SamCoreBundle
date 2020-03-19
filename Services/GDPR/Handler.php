@@ -9,8 +9,6 @@ use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 
 class Handler
 {
-    const INACTIVITY_INTERVAL = '5M';
-
     /**
      * @var ObjectManager
      */
@@ -37,10 +35,11 @@ class Handler
     {
         $affectedUsers = 0;
 
-        $inactiveUsers = $this->getInactiveUsers();
-        $this->logger->info(sprintf('Found %d inactive users', count($inactiveUsers)));
-        foreach ($inactiveUsers as $user) {
-            $hasBeenHandled = $this->handleInactiveUser($user);
+        $users = $this->om->getRepository('CanalTPSamEcoreUserManagerBundle:User')->findAll();
+
+        $this->logger->info(sprintf('Found %d users', count($users)));
+        foreach ($users as $user) {
+            $hasBeenHandled = $this->handleUser($user);
             if ($hasBeenHandled) {
                 $affectedUsers++;
             }
@@ -49,18 +48,7 @@ class Handler
         return $affectedUsers;
     }
 
-    private function getInactiveUsers()
-    {
-        $now = new \DateTime();
-        $interval = new \DateInterval('P' . self::INACTIVITY_INTERVAL);
-        $lastLoginDate = $now->sub($interval);
-
-        return $this->om
-            ->getRepository('CanalTPSamEcoreUserManagerBundle:User')
-            ->getIncativeUsersSince($lastLoginDate);
-    }
-
-    private function handleInactiveUser(User $user)
+    private function handleUser(User $user)
     {
         $handler = Factory::create($user, $this->container);
         return $handler->handle($user);

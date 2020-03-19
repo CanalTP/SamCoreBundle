@@ -1,6 +1,6 @@
 <?php
 
-namespace CanalTP\SamCoreBundle\Services\GDPR;
+namespace CanalTP\SamCoreBundle\Services\GDPR\Notifier;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
@@ -8,17 +8,14 @@ use Psr\Log\LogLevel;
 use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 
-class WarningNotifier extends Notifier implements HandlerInterface
+class Warning extends Notifier implements HandlerInterface
 {
+    const DELETING_AFTER = '1M';
+
     public function handle(User $user)
     {
-        if ($this->userIsSuperAdmin($user)) {
-            $this->logActionOnUser($user, 'no action, user is super admin', LogLevel::INFO);
-            return false;
-        }
-
         $now = new \DateTime();
-        $interval = new \DateInterval('P' . parent::DELETING_AFTER);
+        $interval = new \DateInterval('P' . self::DELETING_AFTER);
         $deletionDate = $now->add($interval);
         try {
             $this->sendNotificationMail($user, $deletionDate);

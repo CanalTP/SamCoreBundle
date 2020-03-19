@@ -1,12 +1,12 @@
 <?php
 
-namespace CanalTP\SamCoreBundle\Tests\Unit\Services\GDPR;
+namespace CanalTP\SamCoreBundle\Tests\Unit\Services\GDPR\Notifier;
 
 use CanalTP\SamEcoreUserManagerBundle\Entity\User;
-use CanalTP\SamCoreBundle\Services\GDPR\WarningNotifier;
+use CanalTP\SamCoreBundle\Services\GDPR\Notifier\Warning;
 use CanalTP\SamCoreBundle\Tests\Unit\Services\GdprTestCase;
 
-class WarningNotifierTest extends GdprTestCase
+class WarningTest extends GdprTestCase
 {
     private $userIsSuperAdmin = false;
 
@@ -17,14 +17,14 @@ class WarningNotifierTest extends GdprTestCase
 
     public function testConstants()
     {
-        $this->assertEquals('1M', WarningNotifier::DELETING_AFTER);
+        $this->assertEquals('1M', Warning::DELETING_AFTER);
     }
 
     public function testHandleWithUsualUser()
     {
         $user = $this->mockUser(1, null);
 
-        $notifier = new WarningNotifier(
+        $notifier = new Warning(
             $this->mockEntityManager(1, 1),
             $this->logger,
             $this->mockTemplating(),
@@ -49,21 +49,6 @@ class WarningNotifierTest extends GdprTestCase
         return $reflectionProperty->getValue($user);
     }
 
-    public function testHandleWithSuperAdmin()
-    {
-        $this->userIsSuperAdmin = true;
-        $user = $this->mockUser(1, null);
-
-        $notifier = new WarningNotifier(
-            $this->mockEntityManager(0, 0),
-            $this->logger,
-            $this->mockTemplating(),
-            $this->mockMailer()
-        );
-
-        $this->assertEquals(false, $notifier->handle($user));
-    }
-
     public function testFlushImpossible()
     {
         $emMock = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
@@ -77,7 +62,7 @@ class WarningNotifierTest extends GdprTestCase
             ->method('flush')
             ->will($this->throwException(new \Exception('test')));
 
-        $notifier = new WarningNotifier($emMock, $this->logger, $this->mockTemplating(), $this->mockMailer());
+        $notifier = new Warning($emMock, $this->logger, $this->mockTemplating(), $this->mockMailer());
 
         $user = $this->mockUser(1, null);
         $this->assertEquals(false, $notifier->handle($user));
@@ -94,7 +79,7 @@ class WarningNotifierTest extends GdprTestCase
             ->method('send')
             ->willReturn(0);
 
-        $notifier = new WarningNotifier(
+        $notifier = new Warning(
             $this->mockEntityManager(0, 0),
             $this->logger,
             $this->mockTemplating(),
@@ -103,10 +88,5 @@ class WarningNotifierTest extends GdprTestCase
 
         $user = $this->mockUser(1, null);
         $this->assertEquals(false, $notifier->handle($user));
-    }
-
-    public function userHasRole($role)
-    {
-        return $role === 'ROLE_SUPER_ADMIN' && $this->userIsSuperAdmin;
     }
 }
