@@ -41,14 +41,6 @@ class WarningTest extends GdprTestCase
         );
     }
 
-    private function getUserDeletionDate($user)
-    {
-        $reflectionClass = new \ReflectionClass(User::class);
-        $reflectionProperty = $reflectionClass->getProperty('deletionDate');
-        $reflectionProperty->setAccessible(true);
-        return $reflectionProperty->getValue($user);
-    }
-
     public function testFlushImpossible()
     {
         $emMock = $this->getMockBuilder('\Doctrine\ORM\EntityManager')

@@ -9,27 +9,6 @@ class Deletion extends Notifier implements HandlerInterface
 {
     public function handle(User $user)
     {
-        if (!$this->shouldBeDeleted($user)) {
-            return false;
-        }
-
-        return $this->deleteUser($user);
-    }
-
-    private function shouldBeDeleted(User $user)
-    {
-        $now = new \DateTime();
-
-        if ($now > $user->getDeletionDate()) {
-            return true;
-        }
-
-        $this->logActionOnUser($user, 'no deletion. Deletion date is in the future', LogLevel::INFO);
-        return false;
-    }
-
-    private function deleteUser(User $user)
-    {
         try {
             $this->sendDeletionMail($user);
             $this->om->remove($user);
