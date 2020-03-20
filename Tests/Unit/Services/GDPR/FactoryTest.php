@@ -56,6 +56,7 @@ class FactoryTest extends GdprTestCase
             [$this->mockUser(10, $oneMonthAfter, null), Nothing::class],
             [$this->mockUser(11, $now, $sevenMonthAgo), Deletion::class],
             [$this->mockUser(12, $now, $oneMonthAgo), Reset::class],
+            [$this->mockUser(13, $oneMonthAfter, $sevenMonthAgo), Nothing::class],
         ];
     }
 

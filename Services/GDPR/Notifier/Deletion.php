@@ -10,10 +10,11 @@ class Deletion extends Notifier implements HandlerInterface
     public function handle(User $user)
     {
         try {
+            $originalUser = clone $user;
             $this->sendDeletionMail($user);
             $this->om->remove($user);
             $this->om->flush();
-            $this->logActionOnUser($user, 'account has been deleted', LogLevel::INFO);
+            $this->logActionOnUser($originalUser, 'account has been deleted', LogLevel::INFO);
         } catch (\Exception $e) {
             $this->logActionOnUser($user, $e->getMessage(), LogLevel::ERROR);
             return false;

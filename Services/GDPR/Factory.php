@@ -45,7 +45,7 @@ class Factory
 
         //if user has login and deletion dates => if deletion - last login date >= 6 months, then remove them
         //                                        else set deletion date to null
-        if ($lastLoginDate && $deletionDate) {
+        if ($lastLoginDate && $deletionDate && self::dateIsInPast($deletionDate)) {
             if (self::dateDiffGreaterThanLimit($lastLoginDate, $deletionDate)) {
                 return $container->get('sam.gdpr.deletion.notifier');
             }
