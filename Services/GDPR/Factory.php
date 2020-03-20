@@ -45,12 +45,14 @@ class Factory
 
         //if user has login and deletion dates => if deletion - last login date >= 6 months, then remove them
         //                                        else set deletion date to null
-        if ($lastLoginDate && $deletionDate && self::dateIsInPast($deletionDate)) {
-            if (self::dateDiffGreaterThanLimit($lastLoginDate, $deletionDate)) {
-                return $container->get('sam.gdpr.deletion.notifier');
+        if ($lastLoginDate && $deletionDate) {
+            if (!self::dateDiffGreaterThanLimit($lastLoginDate, $deletionDate)) {
+                return $container->get('sam.gdpr.reset.notifier');
             }
 
-            return $container->get('sam.gdpr.reset.notifier');
+            if (self::dateIsInPast($deletionDate)) {
+                return $container->get('sam.gdpr.deletion.notifier');
+            }
         }
 
         return $container->get('sam.gdpr.nothing.notifier');
@@ -77,11 +79,14 @@ class Factory
         return $date < $now;
     }
 
-    private static function dateDiffGreaterThanLimit(\DateTime $start, \DateTime $end)
+    private static function dateDiffGreaterThanLimit(\DateTime $lastLoginDate, \DateTime $deletionDate)
     {
-        $interval = new \DateInterval('P' . self::DELETE_AFTER);
-        $dateLimit = $end->sub($interval);
+        $endDate = clone $deletionDate;
 
-        return $dateLimit > $start;
+        $interval = new \DateInterval('P' . self::DELETE_AFTER);
+        $dateLimit = $endDate->sub($interval);
+
+        $isGreater = $dateLimit > $lastLoginDate;
+        return $isGreater;
     }
 }
