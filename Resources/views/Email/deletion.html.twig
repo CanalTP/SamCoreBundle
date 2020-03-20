@@ -1,21 +1,24 @@
-Bonjour,
+{% extends "CanalTPSamCoreBundle:Email:base.html.twig" %}
+{% block body %}
+<p>Bonjour,</p>
 
-Dans le cadre de notre politique RGPD et et conformément au mail que nous vous avons envoyé le mois dernier, votre compte a été supprimé de la plateforme : {{ url('fos_user_security_login') }}.
+<p>Dans le cadre de notre politique RGPD et et conformément au mail que nous vous avons envoyé le mois dernier, votre compte a été supprimé de la plateforme : <a href="{{ loginUrl }}">{{ loginUrl }}</a>.</p>
 
-Pour toute question ou création d'un nouveau compte, veuillez contacter le support Kisio Digital.
+<p>Pour toute question ou création d'un nouveau compte, veuillez contacter le support Kisio Digital.</p>
 
-Merci.
+<p>Merci.</p>
 
-L'équipe Kisio Digital
-
+<p>L'équipe Kisio Digital</p>
+<br/>
 -----------------------------------------------------------------------------------------------------------------------
+<br/>
+<p>Hello,</p>
 
-Hello,
+<p>As part of our GDPR policy and in conformity with our previous mail, your account has been deleted of the platform: <a href="{{ loginUrl }}">{{ loginUrl }}</a>.</p>
 
-As part of our GDPR policy and in conformity with our previous mail, your account has been deleted of the platform: {{ url('fos_user_security_login') }}.
+<p>Please contact our support team for any question or to demand a new account.</p>
 
-Please contact our support team for any question or to demand a new account.
+<p>Thank you.</p>
 
-Thank you.
-
-The Kisio Digital Team.
+<p>The Kisio Digital Team.</p>
+{% endblock %}

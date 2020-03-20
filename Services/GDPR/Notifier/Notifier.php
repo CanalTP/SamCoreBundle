@@ -61,4 +61,26 @@ abstract class Notifier
 
         $this->logger->log($level, $msg);
     }
+
+    protected function sendEmailToUser(User $user, $subject, $body)
+    {
+        $to = $user->getEmailCanonical();
+        $this->logger->debug('Sending email to ' . $to);
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom('support@kisio.com')
+            ->setTo($to)
+            ->setReplyTo('support@kisio.com')
+            ->setContentType('text/html')
+            ->setBody($body);
+
+        $result = $this->mailer->send($message);
+
+        if ($result === 0) {
+            throw new \RuntimeException('Unable to send email to ' . $to);
+        }
+
+        $this->logActionOnUser($user, 'email has been sent', LogLevel::INFO);
+    }
 }
