@@ -28,7 +28,8 @@ class WarningTest extends GdprTestCase
             $this->mockEntityManager(1, 1),
             $this->logger,
             $this->mockTemplating(),
-            $this->mockMailer()
+            $this->mockMailer(),
+            $this->mockTranslator()
         );
 
         $this->assertEquals(true, $notifier->handle($user));
@@ -54,7 +55,13 @@ class WarningTest extends GdprTestCase
             ->method('flush')
             ->will($this->throwException(new \Exception('test')));
 
-        $notifier = new Warning($emMock, $this->logger, $this->mockTemplating(), $this->mockMailer());
+        $notifier = new Warning(
+            $emMock,
+            $this->logger,
+            $this->mockTemplating(),
+            $this->mockMailer(),
+            $this->mockTranslator()
+        );
 
         $user = $this->mockUser(1, null);
         $this->assertEquals(false, $notifier->handle($user));
@@ -75,7 +82,8 @@ class WarningTest extends GdprTestCase
             $this->mockEntityManager(0, 0),
             $this->logger,
             $this->mockTemplating(),
-            $mailerMock
+            $mailerMock,
+            $this->mockTranslator()
         );
 
         $user = $this->mockUser(1, null);

@@ -21,7 +21,8 @@ class NothingTest extends GdprTestCase
             $this->mockEntityManager(0, 0),
             $this->logger,
             $this->mockTemplating(),
-            $this->mockMailer()
+            $this->mockMailer(),
+            $this->mockTranslator()
         );
 
         $this->assertEquals(false, $notifier->handle($user));

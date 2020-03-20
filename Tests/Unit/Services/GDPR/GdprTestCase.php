@@ -106,6 +106,20 @@ class GdprTestCase extends UnitTestCase
         return $mailer;
     }
 
+    /**
+     * Mocks translation object
+     *
+     * @return Symfony\Component\Translation\TranslatorInterface
+     */
+    protected function mockTranslator()
+    {
+        $mock = $this->getMockBuilder('Symfony\Component\Translation\TranslatorInterface')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        return $mock;
+    }
+
     protected function generateDateInFuture($afterInterval = '1M')
     {
         $now = new \DateTime();

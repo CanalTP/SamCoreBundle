@@ -61,20 +61,20 @@ services:
 
     sam.gdpr.warning.notifier:
         class: CanalTP\SamCoreBundle\Services\GDPR\Notifier\Warning
-        arguments: ['@doctrine.orm.entity_manager', '@logger', '@templating', '@mailer']
+        arguments: ['@doctrine.orm.entity_manager', '@logger', '@templating', '@mailer', '@translator']
 
     sam.gdpr.deletion.notifier:
         class: CanalTP\SamCoreBundle\Services\GDPR\Notifier\Deletion
-        arguments: ['@doctrine.orm.entity_manager', '@logger', '@templating', '@mailer']
+        arguments: ['@doctrine.orm.entity_manager', '@logger', '@templating', '@mailer', '@translator']
 
     sam.gdpr.nothing.notifier:
         class: CanalTP\SamCoreBundle\Services\GDPR\Notifier\Nothing
-        arguments: ['@doctrine.orm.entity_manager', '@logger', '@templating', '@mailer']
+        arguments: ['@doctrine.orm.entity_manager', '@logger', '@templating', '@mailer', '@translator']
 
     sam.gdpr.superadmin.notifier:
         class: CanalTP\SamCoreBundle\Services\GDPR\Notifier\SuperAdmin
-        arguments: ['@doctrine.orm.entity_manager', '@logger', '@templating', '@mailer']
+        arguments: ['@doctrine.orm.entity_manager', '@logger', '@templating', '@mailer', '@translator']
 
     sam.gdpr.reset.notifier:
         class: CanalTP\SamCoreBundle\Services\GDPR\Notifier\Reset
-        arguments: ['@doctrine.orm.entity_manager', '@logger', '@templating', '@mailer']
+        arguments: ['@doctrine.orm.entity_manager', '@logger', '@templating', '@mailer', '@translator']

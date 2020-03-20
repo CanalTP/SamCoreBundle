@@ -26,7 +26,8 @@ class ResetTest extends GdprTestCase
             $this->mockEntityManager(1, 1),
             $this->logger,
             $this->mockTemplating(),
-            $this->mockMailer()
+            $this->mockMailer(),
+            $this->mockTranslator()
         );
 
         $this->assertEquals(true, $notifier->handle($user));
@@ -45,7 +46,13 @@ class ResetTest extends GdprTestCase
             ->method('persist')
             ->will($this->throwException(new \Exception('test')));
 
-        $notifier = new Reset($emMock, $this->logger, $this->mockTemplating(), $this->mockMailer());
+        $notifier = new Reset(
+            $emMock,
+            $this->logger,
+            $this->mockTemplating(),
+            $this->mockMailer(),
+            $this->mockTranslator()
+        );
 
         $user = $this->mockUser(1, null);
         $this->assertEquals(false, $notifier->handle($user));

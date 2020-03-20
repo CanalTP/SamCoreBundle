@@ -20,7 +20,8 @@ class DeletionTest extends GdprTestCase
             $this->mockEntityManager(0, 1),
             $this->logger,
             $this->mockTemplating(),
-            $this->mockMailer()
+            $this->mockMailer(),
+            $this->mockTranslator()
         );
 
         $this->assertEquals(true, $notifier->handle($user));
@@ -37,7 +38,13 @@ class DeletionTest extends GdprTestCase
             ->method('remove')
             ->will($this->throwException(new \Exception('test')));
 
-        $notifier = new Deletion($emMock, $this->logger, $this->mockTemplating(), $this->mockMailer());
+        $notifier = new Deletion(
+            $emMock,
+            $this->logger,
+            $this->mockTemplating(),
+            $this->mockMailer(),
+            $this->mockTranslator()
+        );
 
         $user = $this->mockUser(1, $this->generateDateInFuture());
         $this->assertEquals(false, $notifier->handle($user));
@@ -58,7 +65,8 @@ class DeletionTest extends GdprTestCase
             $this->mockEntityManager(0, 0),
             $this->logger,
             $this->mockTemplating(),
-            $mailerMock
+            $mailerMock,
+            $this->mockTranslator()
         );
 
         $user = $this->mockUser(1, $this->generateDateInPast());

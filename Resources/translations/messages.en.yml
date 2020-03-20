@@ -6,3 +6,10 @@ ctp_core:
         follow_navitia_twitter: Follow Navitia on Twitter
         follow_kisio_linkedin: Follow Kisio Digital on LinkedIn
         checkout_navitiaio: Let's see our Navitia.io API
+gdpr:
+    warning:
+        email:
+            subject: Your account is inactive
+    deletion:
+        email:
+            subject: Your account has been deleted

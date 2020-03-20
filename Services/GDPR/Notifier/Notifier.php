@@ -6,6 +6,7 @@ use Psr\Log\LogLevel;
 use Psr\Log\LoggerInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Translation\TranslatorInterface;
 use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 
 abstract class Notifier
@@ -30,16 +31,23 @@ abstract class Notifier
      */
     protected $mailer;
 
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
     public function __construct(
         ObjectManager $om,
         LoggerInterface $logger,
         TwigEngine $templating,
-        \Swift_Mailer $mailer
+        \Swift_Mailer $mailer,
+        TranslatorInterface $translator
     ) {
         $this->om = $om;
         $this->logger = $logger;
         $this->templating = $templating;
         $this->mailer = $mailer;
+        $this->translator = $translator;
     }
 
     protected function logActionOnUser(User $user, $message, $level)

@@ -39,13 +39,12 @@ class Warning extends Notifier implements HandlerInterface
         $this->logger->debug('Sending warning email to ' . $to);
 
         $message = \Swift_Message::newInstance()
-            ->setSubject('subject')
-            ->setFrom('info@kisiodigital.com')
+            ->setSubject($this->translator->trans('gdpr.deletion.email.subject'))
+            ->setFrom('support@kisio.com')
             ->setTo($to)
-            ->setReplyTo('noreply@kisiodigital.com')
+            ->setReplyTo('support@kisio.com')
             ->setContentType('text/html')
             ->setBody($this->templating->render('CanalTPSamCoreBundle:Email:warning.html.twig', [
-                'user' => $user,
                 'deletionDate' => $deletionDate
             ]));
 
