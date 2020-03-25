@@ -1,0 +1,85 @@
+<?php
+
+namespace CanalTP\SamCoreBundle\Tests\Unit\Services\GDPR\Notifier;
+
+use CanalTP\SamCoreBundle\Services\GDPR\Notifier\Deletion;
+use CanalTP\SamCoreBundle\Tests\Unit\Services\GdprTestCase;
+
+class DeletionTest extends GdprTestCase
+{
+    protected function setUp()
+    {
+        $this->initLogger();
+    }
+
+    public function testHandleWithUsualUser()
+    {
+        $user = $this->mockUser(1, $this->generateDateInPast());
+
+        $notifier = new Deletion(
+            $this->mockEntityManager(0, 1),
+            $this->logger,
+            $this->mockTemplating(),
+            $this->mockMailer(),
+            $this->mockTranslator()
+        );
+
+        $this->assertEquals(true, $notifier->handle($user));
+    }
+
+    public function testFlushImpossible()
+    {
+        $emMock = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+            ->disableOriginalConstructor()
+            ->setMethods(['remove'])
+            ->getMock();
+
+        $emMock
+            ->method('remove')
+            ->will($this->throwException(new \Exception('test')));
+
+        $notifier = new Deletion(
+            $emMock,
+            $this->logger,
+            $this->mockTemplating(),
+            $this->mockMailer(),
+            $this->mockTranslator()
+        );
+
+        $user = $this->mockUser(1, $this->generateDateInFuture());
+        $this->assertEquals(false, $notifier->handle($user));
+    }
+
+    public function testEmailSendingFails()
+    {
+        $mailerMock = $this->getMockBuilder('\Swift_Mailer')
+            ->disableOriginalConstructor()
+            ->setMethods(['send'])
+            ->getMock();
+
+        $mailerMock
+            ->method('send')
+            ->willReturn(0);
+
+        $notifier = new Deletion(
+            $this->mockEntityManager(0, 0),
+            $this->logger,
+            $this->mockTemplating(),
+            $mailerMock,
+            $this->mockTranslator()
+        );
+
+        $user = $this->mockUser(1, $this->generateDateInPast());
+        $this->assertEquals(false, $notifier->handle($user));
+    }
+
+    private function generateDateInPast($pastInterval = '1M')
+    {
+        $now = new \DateTime();
+        $interval = new \DateInterval('P'.$pastInterval);
+
+        $delDate = $now->sub($interval);
+
+        return $delDate;
+    }
+}

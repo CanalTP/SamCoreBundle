@@ -161,3 +161,10 @@ perimeter:
 profile:
     flash:
         updated: L'utilisateur a bien été mis à jour
+gdpr:
+    warning:
+        email:
+            subject: Votre compte est inactif
+    deletion:
+        email:
+            subject: Votre compte a été supprimé
