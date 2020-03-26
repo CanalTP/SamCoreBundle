@@ -62,10 +62,18 @@ services:
     sam.gdpr.warning.notifier:
         class: CanalTP\SamCoreBundle\Services\GDPR\Notifier\Warning
         arguments: ['@doctrine.orm.entity_manager', '@logger', '@templating', '@mailer', '@translator']
+        calls:
+            - method: setBaseUrl
+              arguments:
+                  - '%nmm_base_url%'
 
     sam.gdpr.deletion.notifier:
         class: CanalTP\SamCoreBundle\Services\GDPR\Notifier\Deletion
         arguments: ['@doctrine.orm.entity_manager', '@logger', '@templating', '@mailer', '@translator']
+        calls:
+            - method: setBaseUrl
+              arguments:
+                  - '%nmm_base_url%'
 
     sam.gdpr.nothing.notifier:
         class: CanalTP\SamCoreBundle\Services\GDPR\Notifier\Nothing

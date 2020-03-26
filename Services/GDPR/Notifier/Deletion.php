@@ -7,6 +7,13 @@ use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 
 class Deletion extends Notifier implements HandlerInterface
 {
+    private $baseUrl;
+
+    public function setBaseUrl($baseUrl)
+    {
+        $this->baseUrl = $baseUrl;
+    }
+
     public function handle(User $user)
     {
         try {
@@ -26,7 +33,9 @@ class Deletion extends Notifier implements HandlerInterface
     private function sendDeletionMail(User $user)
     {
         $subject = $this->translator->trans('gdpr.deletion.email.subject');
-        $body = $this->templating->render('CanalTPSamCoreBundle:Email:deletion.html.twig');
+        $body = $this->templating->render('CanalTPSamCoreBundle:Email:deletion.html.twig', [
+            'baseUrl' => $this->baseUrl
+        ]);
         $this->sendEmailToUser($user, $subject, $body);
     }
 }

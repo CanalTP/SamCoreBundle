@@ -12,6 +12,13 @@ class Warning extends Notifier implements HandlerInterface
 {
     const DELETING_AFTER = '1M';
 
+    private $baseUrl;
+
+    public function setBaseUrl($baseUrl)
+    {
+        $this->baseUrl = $baseUrl;
+    }
+
     public function handle(User $user)
     {
         $now = new \DateTime();
@@ -37,7 +44,8 @@ class Warning extends Notifier implements HandlerInterface
     {
         $subject = $this->translator->trans('gdpr.warning.email.subject');
         $body = $this->templating->render('CanalTPSamCoreBundle:Email:warning.html.twig', [
-            'deletionDate' => $deletionDate
+            'deletionDate' => $deletionDate,
+            'baseUrl' => $this->baseUrl
         ]);
         $this->sendEmailToUser($user, $subject, $body);
     }

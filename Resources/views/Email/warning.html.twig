@@ -1,10 +1,11 @@
 {% extends "CanalTPSamCoreBundle:Email:base.html.twig" %}
 {% block body %}
+{% set formated_deletion_date = deletionDate|date("d/m/Y") %}
 <p>Bonjour,</p>
 
-<p>Dans le cadre de notre politique RGPD, nous procédons régulièrement à la purge des comptes inactifs. Ne vous étant pas connectés depuis 5 mois, votre compte rentre dans cette catégorie et sera supprimé le {{ deletionDate|date("m/d/Y") }}.</p>
+<p>Dans le cadre de notre politique RGPD, nous procédons régulièrement à la purge des comptes inactifs. Ne vous étant pas connectés depuis 5 mois, votre compte rentre dans cette catégorie et sera supprimé le {{ formated_deletion_date }}.</p>
 
-<p>Pour éviter cette suppression, veuillez vous connecter à la plateforme avant la fin de ce délai : <a href="{{ loginUrl }}">{{ loginUrl }}</a>.</p>
+<p>Pour éviter cette suppression, veuillez vous connecter à la plateforme avant la fin de ce délai : <a href="{{ baseUrl }}">{{ baseUrl }}</a>.</p>
 
 <p>Merci.</p>
 
@@ -14,9 +15,9 @@
 <br/>
 <p>Hello,</p>
 
-<p>As part of our GDPR policy, we delete inactive account often. You didn't connect to our platform for five months, your account is now inactive and will be deleted on {{ deletionDate|date("m/d/Y") }}.</p>
+<p>As part of our GDPR policy, we delete inactive user accounts regularly. You didn't connect to our platform for five months, your account is now inactive and will be deleted on {{ formated_deletion_date }}.</p>
 
-<p>To avoid this deletion, please connect yourself to the platform before the delay: <a href="{{ loginUrl }}">{{ loginUrl }}</a>.</p>
+<p>To avoid this deletion, please connect yourself to the platform before the delay: <a href="{{ baseUrl }}">{{ baseUrl }}</a>.</p>
 
 <p>Thank you.</p>
 
