@@ -8,6 +8,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Translation\TranslatorInterface;
 use CanalTP\SamEcoreUserManagerBundle\Entity\User;
+use CanalTP\SamCoreBundle\Entity\Customer;
 
 abstract class Notifier
 {
@@ -52,9 +53,10 @@ abstract class Notifier
 
     protected function logActionOnUser(User $user, $message, $level)
     {
+        $customerName = ($user->getCustomer() instanceof Customer) ? $user->getCustomer()->getName() : 'not found';
         $msg = sprintf(
             'Client %s User ID %s %s ',
-            str_pad($user->getCustomer()->getName() . ':', 20, ' '),
+            str_pad($customerName . ':', 20, ' '),
             str_pad($user->getId() . ':', 3, ' '),
             $message
         );

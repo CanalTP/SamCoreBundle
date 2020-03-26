@@ -11,17 +11,43 @@ use CanalTP\SamCoreBundle\Tests\Unit\UnitTestCase;
 
 class GdprTestCase extends UnitTestCase
 {
-    protected function mockUser($id, $deletionDate, $lastLoginDate = null, $isSuperAdmin = false, $mockMethods = [])
+    protected function mockCustomer()
     {
-        $customer = $this->getMockBuilder(Customer::class)
+        $mock = $this->getMockBuilder(Customer::class)
             ->disableOriginalConstructor()
             ->setMethods(['getName'])
             ->getMock();
 
-        $customer
+        $mock
             ->method('getName')
             ->willReturn('test');
 
+        return $mock;
+    }
+
+    protected function mockUser($id, $deletionDate, $lastLoginDate = null, $isSuperAdmin = false, $mockMethods = [])
+    {
+        return $this->stubUser($id, $deletionDate, $lastLoginDate, $isSuperAdmin, $mockMethods, $this->mockCustomer());
+    }
+
+    protected function mockUserWithoutCustomer(
+        $id,
+        $deletionDate,
+        $lastLoginDate = null,
+        $isSuperAdmin = false,
+        $mockMethods = []
+    ) {
+        return $this->stubUser($id, $deletionDate, $lastLoginDate, $isSuperAdmin, $mockMethods, null);
+    }
+
+    protected function stubUser(
+        $id,
+        $deletionDate,
+        $lastLoginDate = null,
+        $isSuperAdmin = false,
+        $mockMethods = [],
+        $customer = null
+    ) {
         $methods = array_merge(['getId', 'getLastLogin', 'getDeletionDate', 'getCustomer', 'hasRole'], $mockMethods);
 
         $user = $this->getMockBuilder(User::class)
