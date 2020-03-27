@@ -164,7 +164,7 @@ profile:
 gdpr:
     warning:
         email:
-            subject: Votre compte est inactif
+            subject: Kisio Digital - Votre compte est inactif
     deletion:
         email:
-            subject: Votre compte a été supprimé
+            subject: Kisio Digital - Votre compte a été supprimé

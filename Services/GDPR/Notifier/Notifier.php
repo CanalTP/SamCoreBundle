@@ -52,9 +52,10 @@ abstract class Notifier
 
     protected function logActionOnUser(User $user, $message, $level)
     {
+        $customerName = $user->getCustomer() ? $user->getCustomer()->getName() : 'not found';
         $msg = sprintf(
             'Client %s User ID %s %s ',
-            str_pad($user->getCustomer()->getName() . ':', 20, ' '),
+            str_pad($customerName . ':', 20, ' '),
             str_pad($user->getId() . ':', 3, ' '),
             $message
         );
