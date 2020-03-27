@@ -3,6 +3,7 @@ namespace CanalTP\SamCoreBundle\Services\GDPR\Notifier;
 
 use Psr\Log\LogLevel;
 use CanalTP\SamEcoreUserManagerBundle\Entity\User;
+use CanalTP\SamCoreBundle\Services\GDPR\HandlerInterface;
 
 class Reset extends Notifier implements HandlerInterface
 {

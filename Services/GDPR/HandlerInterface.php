@@ -1,6 +1,6 @@
 <?php
 
-namespace CanalTP\SamCoreBundle\Services\GDPR\Notifier;
+namespace CanalTP\SamCoreBundle\Services\GDPR;
 
 use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 

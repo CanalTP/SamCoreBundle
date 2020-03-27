@@ -9,7 +9,7 @@ ctp_core:
 gdpr:
     warning:
         email:
-            subject: Your account is inactive
+            subject: Kisio Digital - Your account is inactive
     deletion:
         email:
-            subject: Your account has been deleted
+            subject: Kisio Digital - Your account has been deleted

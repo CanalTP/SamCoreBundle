@@ -7,6 +7,7 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 use Symfony\Bundle\TwigBundle\TwigEngine;
+use CanalTP\SamCoreBundle\Services\GDPR\HandlerInterface;
 
 class Warning extends Notifier implements HandlerInterface
 {
