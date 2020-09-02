@@ -32,7 +32,7 @@ trait ApplicationTrait
     }
 
     /**
-     * Clean la route
+     * Clean the route
      *
      * @param string $route
      *
