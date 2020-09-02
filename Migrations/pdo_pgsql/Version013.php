@@ -6,7 +6,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 
 /**
- * Adding created_at column in public.t_user_usr table
+ * Adding / at the end of app_default_route if necessary
  */
 class Version013 extends AbstractMigration
 {
