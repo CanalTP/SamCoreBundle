@@ -21,7 +21,7 @@ trait ApplicationTrait
         $entity = $om->getRepository('CanalTPSamCoreBundle:Application')->findOneByCanonicalName($canonicalName);
         if (is_null($entity)) {
             $entity = new Application($name);
-            $entity->setDefaultRoute($route);
+            $entity->setDefaultRoute($this->normalizeRoute($route));
             $entity->setCanonicalName($canonicalName);
             $entity->setBundleName($bundleName);
 
@@ -29,5 +29,26 @@ trait ApplicationTrait
         }
 
         $this->addReference('app-' . $entity->getCanonicalName(), $entity);
+    }
+
+    /**
+     * Normalize the route
+     *
+     * @param string $route
+     *
+     * @return string
+     */
+    private function normalizeRoute($route)
+    {
+        $cleanedRoute = trim($route);
+        // Route must begin with "/"
+        if ($cleanedRoute && $cleanedRoute[0] !== '/') {
+            $cleanedRoute = '/' . $cleanedRoute;
+        }
+        // For first component route, must end with "/"
+        if ($cleanedRoute && substr_count($cleanedRoute, '/') === 1) {
+            $cleanedRoute = $cleanedRoute . '/';
+        }
+        return $cleanedRoute;
     }
 }
