@@ -228,8 +228,8 @@ class Customer extends AbstractEntity implements CustomerInterface
     {
         return (
             $this->getApplications()->filter(
-                function($customerApplication) {
-                   return ($customerApplication->getIsActive());
+                function ($customerApplication) {
+                    return ($customerApplication->getIsActive());
                 }
             )
         );

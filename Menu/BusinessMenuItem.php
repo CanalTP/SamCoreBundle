@@ -19,11 +19,13 @@ class BusinessMenuItem extends AbstractBusinessMenuItem
     protected $route;
     protected $parameters;
 
-    public function setAction($action) {
+    public function setAction($action)
+    {
         $this->action = $action;
     }
 
-    public function getAction() {
+    public function getAction()
+    {
         return $this->action;
     }
 
@@ -32,31 +34,38 @@ class BusinessMenuItem extends AbstractBusinessMenuItem
         $this->children[] = $child;
     }
 
-    public function getChildren() {
+    public function getChildren()
+    {
         return $this->children;
     }
 
-    public function setName($name) {
+    public function setName($name)
+    {
         $this->name = $name;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function setRoute($route) {
+    public function setRoute($route)
+    {
         $this->route = $route;
     }
 
-    public function getRoute() {
+    public function getRoute()
+    {
         return $this->route;
     }
 
-    public function setParameters($parameters) {
+    public function setParameters($parameters)
+    {
         $this->parameters = $parameters;
     }
 
-    public function getParameters() {
+    public function getParameters()
+    {
         return $this->parameters;
     }
 }

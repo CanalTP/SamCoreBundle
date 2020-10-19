@@ -1,0 +1,7 @@
+/vendor
+composer.lock
+
+# Tests
+phpunit.xml
+checkstyle-result.xml
+docs

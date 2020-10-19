@@ -4,7 +4,7 @@ namespace CanalTP\SamCoreBundle\Tests\Unit\Services\GDPR\Notifier;
 
 use Monolog\Logger;
 use CanalTP\SamCoreBundle\Services\GDPR\Notifier\Reset;
-use CanalTP\SamCoreBundle\Tests\Unit\Services\GdprTestCase;
+use CanalTP\SamCoreBundle\Tests\Unit\Services\GDPR\GdprTestCase;
 
 class ResetTest extends GdprTestCase
 {
@@ -23,7 +23,7 @@ class ResetTest extends GdprTestCase
             ->willReturn(true);
 
         $notifier = new Reset(
-            $this->mockEntityManager(1, 1),
+            $this->mockObjectManager(1, 1),
             $this->logger,
             $this->mockTemplating(),
             $this->mockMailer(),
@@ -37,9 +37,23 @@ class ResetTest extends GdprTestCase
 
     public function testFlushImpossible()
     {
-        $emMock = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+        $emMock = $this->getMockBuilder('\Doctrine\Common\Persistence\ObjectManager')
             ->disableOriginalConstructor()
-            ->setMethods(['persist'])
+            ->setMethods([
+                'find',
+                'persist',
+                'remove',
+                'merge',
+                'clear',
+                'detach',
+                'refresh',
+                'flush',
+                'getRepository',
+                'getClassMetadata',
+                'getMetadataFactory',
+                'initializeObject',
+                'contains'
+                ])
             ->getMock();
 
         $emMock

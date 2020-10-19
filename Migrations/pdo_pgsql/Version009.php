@@ -38,4 +38,3 @@ class Version009 extends AbstractMigration
         $this->addSql('ALTER TABLE tr_customer_cus DROP cus_identifier;');
     }
 }
-

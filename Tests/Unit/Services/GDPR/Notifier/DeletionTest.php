@@ -3,7 +3,7 @@
 namespace CanalTP\SamCoreBundle\Tests\Unit\Services\GDPR\Notifier;
 
 use CanalTP\SamCoreBundle\Services\GDPR\Notifier\Deletion;
-use CanalTP\SamCoreBundle\Tests\Unit\Services\GdprTestCase;
+use CanalTP\SamCoreBundle\Tests\Unit\Services\GDPR\GdprTestCase;
 
 class DeletionTest extends GdprTestCase
 {
@@ -17,7 +17,7 @@ class DeletionTest extends GdprTestCase
         $user = $this->mockUser(1, $this->generateDateInPast());
 
         $notifier = new Deletion(
-            $this->mockEntityManager(0, 1),
+            $this->mockObjectManager(0, 1),
             $this->logger,
             $this->mockTemplating(),
             $this->mockMailer(),
@@ -29,9 +29,23 @@ class DeletionTest extends GdprTestCase
 
     public function testFlushImpossible()
     {
-        $emMock = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+        $emMock = $this->getMockBuilder('\Doctrine\Common\Persistence\ObjectManager')
             ->disableOriginalConstructor()
-            ->setMethods(['remove'])
+            ->setMethods([
+                'find',
+                'persist',
+                'remove',
+                'merge',
+                'clear',
+                'detach',
+                'refresh',
+                'flush',
+                'getRepository',
+                'getClassMetadata',
+                'getMetadataFactory',
+                'initializeObject',
+                'contains'
+                ])
             ->getMock();
 
         $emMock
@@ -62,7 +76,7 @@ class DeletionTest extends GdprTestCase
             ->willReturn(0);
 
         $notifier = new Deletion(
-            $this->mockEntityManager(0, 0),
+            $this->mockObjectManager(0, 0),
             $this->logger,
             $this->mockTemplating(),
             $mailerMock,

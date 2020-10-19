@@ -1,6 +1,6 @@
 <?php
 
-namespace CanalTP\SamCoreBundle\Tests\Unit\Services;
+namespace CanalTP\SamCoreBundle\Tests\Unit\Services\GDPR;
 
 use Monolog\Logger;
 use CanalTP\SamCoreBundle\Services\GDPR\Handler as GdprHandler;
@@ -35,7 +35,7 @@ class HandlerTest extends GdprTestCase
         $this->users = $users;
 
         $this->gdprHandler = new GdprHandler(
-            $this->mockEntityManager(0, 0),
+            $this->mockObjectManager(0, 0),
             $this->logger,
             $this->mockContainer()
         );

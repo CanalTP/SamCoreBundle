@@ -39,7 +39,7 @@ class SchemaSpyCommand extends ContainerAwareCommand
 
     protected function configure()
     {
-       $this
+        $this
             ->setName('doc:schema_spy')
             ->setDescription('Generate full documentation about database structure of the application')
             ->addArgument('path_to_schema_spy_jar', InputArgument::REQUIRED, 'Path to jar file of schemaSpy')

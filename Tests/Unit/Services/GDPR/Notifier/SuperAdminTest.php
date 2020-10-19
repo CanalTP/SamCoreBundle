@@ -4,7 +4,7 @@ namespace CanalTP\SamCoreBundle\Tests\Unit\Services\GDPR\Notifier;
 
 use Monolog\Logger;
 use CanalTP\SamCoreBundle\Services\GDPR\Notifier\SuperAdmin;
-use CanalTP\SamCoreBundle\Tests\Unit\Services\GdprTestCase;
+use CanalTP\SamCoreBundle\Tests\Unit\Services\GDPR\GdprTestCase;
 
 class SuperAdminTest extends GdprTestCase
 {
@@ -18,7 +18,7 @@ class SuperAdminTest extends GdprTestCase
         $user = $this->mockUser(1, null);
 
         $notifier = new SuperAdmin(
-            $this->mockEntityManager(0, 0),
+            $this->mockObjectManager(0, 0),
             $this->logger,
             $this->mockTemplating(),
             $this->mockMailer(),

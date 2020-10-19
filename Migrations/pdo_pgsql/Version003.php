@@ -28,7 +28,6 @@ class Version003 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_8DAB2D03BC4EE2B0 ON public.t_user_usr (cus_id);');
         $this->addSql('ALTER TABLE public.tj_customer_application_cap ADD CONSTRAINT FK_9425A57FBC4EE2B0 FOREIGN KEY (cus_id) REFERENCES public.tr_customer_cus (cus_id) NOT DEFERRABLE INITIALLY IMMEDIATE;');
         $this->addSql('ALTER TABLE public.tj_customer_application_cap ADD CONSTRAINT FK_9425A57F7987212D FOREIGN KEY (app_id) REFERENCES public.tr_application_app (app_id) NOT DEFERRABLE INITIALLY IMMEDIATE;');
-
     }
 
     public function down(Schema $schema)

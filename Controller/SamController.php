@@ -52,5 +52,4 @@ class SamController extends Controller
 //            'content' => $response->getContent(),
 //        )));
 //    }
-
 }

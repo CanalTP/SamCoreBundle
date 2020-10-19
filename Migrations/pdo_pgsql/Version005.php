@@ -60,4 +60,3 @@ class Version005 extends AbstractMigration
         $this->addSql('ALTER TABLE public.t_user_usr DROP COLUMN usr_status;');
     }
 }
-

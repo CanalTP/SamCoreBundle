@@ -15,11 +15,11 @@ class CustomerManager
     protected $navitiaTokenManager = null;
     private $applicationFinder = null;
 
-    public function __construct(ObjectManager $om,
+    public function __construct(
+        ObjectManager $om,
         $navitiaTokenManager,
         ApplicationFinder $applicationFinder
-    )
-    {
+    ) {
         $this->om = $om;
         $this->repository = $this->om->getRepository('CanalTPSamCoreBundle:Customer');
         $this->navitiaTokenManager = $navitiaTokenManager;
