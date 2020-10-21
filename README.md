@@ -9,9 +9,9 @@ It contains
 Unit Tests
 ----------
 
-<b>Requirements : [docker](https://docs.docker.com/get-docker/)</b>
+**Requirements** : [docker](https://docs.docker.com/get-docker/)
 
-You could launch the unit tests with this steps :
+You can launch unit tests following these steps :
 
 1. Build docker image
 ```
@@ -23,6 +23,8 @@ _UID=$(id -u) GID=$(id -g) docker-compose -f docker-compose.test.yml build --no-
 rm -f composer.lock
 _UID=$(id -u) GID=$(id -g) docker-compose -f docker-compose.test.yml run --rm samcore-app composer install --no-interaction --prefer-dist
 ```
+Note : first launch can be very long (>45mins) depending on your device resources.
+
 3. Launch unit tests
 ```
 _UID=$(id -u) GID=$(id -g) docker-compose -f docker-compose.test.yml run --rm samcore-app \
