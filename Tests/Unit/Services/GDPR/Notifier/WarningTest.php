@@ -4,7 +4,7 @@ namespace CanalTP\SamCoreBundle\Tests\Unit\Services\GDPR\Notifier;
 
 use CanalTP\SamEcoreUserManagerBundle\Entity\User;
 use CanalTP\SamCoreBundle\Services\GDPR\Notifier\Warning;
-use CanalTP\SamCoreBundle\Tests\Unit\Services\GdprTestCase;
+use CanalTP\SamCoreBundle\Tests\Unit\Services\GDPR\GdprTestCase;
 
 class WarningTest extends GdprTestCase
 {
@@ -25,7 +25,7 @@ class WarningTest extends GdprTestCase
         $user = $this->mockUser(1, null);
 
         $notifier = new Warning(
-            $this->mockEntityManager(1, 1),
+            $this->mockObjectManager(1, 1),
             $this->logger,
             $this->mockTemplating(),
             $this->mockMailer(),
@@ -44,9 +44,23 @@ class WarningTest extends GdprTestCase
 
     public function testFlushImpossible()
     {
-        $emMock = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+        $emMock = $this->getMockBuilder('\Doctrine\Common\Persistence\ObjectManager')
             ->disableOriginalConstructor()
-            ->setMethods(['persist', 'flush'])
+            ->setMethods([
+                'find',
+                'persist',
+                'remove',
+                'merge',
+                'clear',
+                'detach',
+                'refresh',
+                'flush',
+                'getRepository',
+                'getClassMetadata',
+                'getMetadataFactory',
+                'initializeObject',
+                'contains'
+                ])
             ->getMock();
         $emMock
             ->expects($this->exactly(1))
@@ -79,7 +93,7 @@ class WarningTest extends GdprTestCase
             ->willReturn(0);
 
         $notifier = new Warning(
-            $this->mockEntityManager(0, 0),
+            $this->mockObjectManager(0, 0),
             $this->logger,
             $this->mockTemplating(),
             $mailerMock,

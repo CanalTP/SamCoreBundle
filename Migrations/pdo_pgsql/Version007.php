@@ -27,4 +27,3 @@ class Version007 extends AbstractMigration
         $this->addSql('ALTER TABLE t_user_usr ADD COLUMN usr_expires_at boolean;');
     }
 }
-

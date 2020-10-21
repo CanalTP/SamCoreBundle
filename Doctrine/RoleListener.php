@@ -26,4 +26,3 @@ class RoleListener
         $role->setCanonicalName($this->canonicalize($role));
     }
 }
-

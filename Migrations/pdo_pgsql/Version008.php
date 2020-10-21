@@ -24,4 +24,3 @@ class Version008 extends AbstractMigration
         $this->addSql('ALTER TABLE tr_application_app DROP COLUMN app_bundle_name;');
     }
 }
-

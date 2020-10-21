@@ -28,4 +28,3 @@ class Version006 extends AbstractMigration
         $this->addSql('ALTER TABLE tr_customer_cus ALTER COLUMN cus_email SET not NULL;');
     }
 }
-

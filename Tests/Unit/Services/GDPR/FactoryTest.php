@@ -1,6 +1,6 @@
 <?php
 
-namespace CanalTP\SamCoreBundle\Tests\Unit\Services;
+namespace CanalTP\SamCoreBundle\Tests\Unit\Services\GDPR;
 
 use CanalTP\SamCoreBundle\Services\GDPR\Factory;
 use CanalTP\SamCoreBundle\Services\GDPR\Notifier\Nothing;

@@ -93,6 +93,51 @@ class UnitTestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Stubs object manager
+     *
+     * @return \Doctrine\Common\Persistence\ObjectManager
+     */
+    protected function mockObjectManager($nbUpdatedRecords, $nbSavedRecords)
+    {
+        $mock = $this->getMockBuilder('\Doctrine\Common\Persistence\ObjectManager')
+            ->disableOriginalConstructor()
+            ->setMethods([
+                'find',
+                'persist',
+                'remove',
+                'merge',
+                'clear',
+                'detach',
+                'refresh',
+                'flush',
+                'getRepository',
+                'getClassMetadata',
+                'getMetadataFactory',
+                'initializeObject',
+                'contains'
+                ])
+            ->getMock();
+
+        $mock
+            ->method('getRepository')
+            ->willReturnCallback([$this, 'getRepositoryMock']);
+
+        $mock
+            ->expects($this->exactly($nbUpdatedRecords))
+            ->method('persist');
+
+        $mock
+            ->expects($this->exactly($nbSavedRecords))
+            ->method('flush');
+
+        $mock
+            ->method('remove')
+            ->willReturn(true);
+
+        return $mock;
+    }
+
+    /**
      * Retrieves correct mock object for $repositoryName
      *
      * @param string $repositoryName

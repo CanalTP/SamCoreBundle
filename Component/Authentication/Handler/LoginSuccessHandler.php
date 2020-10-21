@@ -10,7 +10,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface {
+class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
+{
 
     protected $doctrine;
     protected $router;
@@ -45,5 +46,4 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface {
 
         return new RedirectResponse($this->router->generate('canal_tp_sam_homepage'));
     }
-
 }

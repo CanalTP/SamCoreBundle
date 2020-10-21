@@ -24,7 +24,7 @@ class RoleRepository extends EntityRepository
                     ->getResult();
     }
 
-    public function findByRoleJoinedToRequestMatcher(Array $roles)
+    public function findByRoleJoinedToRequestMatcher(array $roles)
     {
         $roles = $this->findByRole($roles);
         $result = array();

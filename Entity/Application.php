@@ -194,7 +194,6 @@ class Application
 
     public function removeRole($role)
     {
-
     }
 
     public function getBundleName()

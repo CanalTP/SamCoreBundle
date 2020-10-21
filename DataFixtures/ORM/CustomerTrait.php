@@ -42,5 +42,4 @@ trait CustomerTrait
         $perimeter->setExternalNetworkId($externalNetworkId);
         $om->persist($perimeter);
     }
-
 }

@@ -52,8 +52,8 @@ class ApplicationRepository extends EntityRepository
     public function findWithEditableRoles($appId)
     {
         $qb = $this->createQueryBuilder('a')
-                ->addSelect('r')
-            ->leftJoin('a.roles', 'r', \Doctrine\ORM\Query\Expr\Join::WITH,  'r.isEditable = true')
+            ->addSelect('r')
+            ->leftJoin('a.roles', 'r', \Doctrine\ORM\Query\Expr\Join::WITH, 'r.isEditable = true')
             ->where('a.id = :id')
             ->orderBy('r.id', 'ASC')
             ->setParameter('id', $appId);

@@ -21,7 +21,6 @@ class Version004 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_6B5760DABC4EE2B0 ON public.t_perimeter_per (cus_id);');
         $this->addSql('ALTER TABLE public.t_perimeter_per ADD CONSTRAINT FK_6B5760DABC4EE2B0 FOREIGN KEY (cus_id) REFERENCES public.tr_customer_cus (cus_id) NOT DEFERRABLE INITIALLY IMMEDIATE;');
         $this->addSql('CREATE UNIQUE INDEX customer_id_external_coverage_id_external_network_id_idx ON public.t_perimeter_per (cus_id, per_external_coverage_id, per_external_network_id);');
-
     }
 
     public function down(Schema $schema)

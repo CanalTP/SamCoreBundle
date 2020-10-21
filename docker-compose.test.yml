@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  samcore-app:
+    image: localhost/samcore:test
+    user: "$_UID:$GID"
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.test
+    environment:
+      SSH_AUTH_SOCK: "/ssh-agent"
+    networks:
+      - default
+    volumes:
+      - ${PWD}:/app:rw
+      - /etc/passwd:/etc/passwd:ro
+      - /etc/group:/etc/group:ro
+      - ${HOME}/.config/composer:${HOME}/.composer:rw
+      - ${HOME}/.ssh:${HOME}/.ssh:ro
+      - ${SSH_AUTH_SOCK}:/ssh-agent:ro
+
+networks:
+  default:
+    name: samcore_test
+    driver: bridge

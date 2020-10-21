@@ -19,13 +19,13 @@ class BusinessComponent extends AbstractBusinessComponent
     public function __construct(
         BusinessPermissionManagerInterface $businessPermissionManager,
         $serviceContainer
-    )
-    {
+    ) {
         $this->businessPermissionManager = $businessPermissionManager;
         $this->container = $serviceContainer;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return 'sam_business_component';
     }
 
@@ -55,7 +55,7 @@ class BusinessComponent extends AbstractBusinessComponent
         $perm->setAction('#');
         $perm->setName($this->container->get('translator')->trans('menu.permissions'));
         $perm->setRoute('sam_security_business_right_edit');
-        
+
         $menu = array();
         if ($this->container->get('security.context')->isGranted('BUSINESS_VIEW_USER')
             || $this->container->get('security.context')->isGranted('BUSINESS_MANAGE_USER')) {
@@ -74,7 +74,7 @@ class BusinessComponent extends AbstractBusinessComponent
         if ($this->container->get('security.context')->isGranted('BUSINESS_MANAGE_CLIENT')) {
             $menu[] = $client;
         }
-        
+
         return $menu;
     }
 
@@ -83,7 +83,8 @@ class BusinessComponent extends AbstractBusinessComponent
         throw new \Exception(sprintf("%s method not implemented", __METHOD__), 1);
     }
 
-    public function getPermissionsManager() {
+    public function getPermissionsManager()
+    {
         return $this->businessPermissionManager;
     }
 }
