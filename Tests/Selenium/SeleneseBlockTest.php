@@ -1,6 +1,6 @@
 <?php
 
-namespace CanalTP\SamCoreBundle\Tests;
+namespace CanalTP\SamCoreBundle\Tests\Selenium;
 
 class SeleneseBlockTest extends \PHPUnit_Extensions_SeleniumTestCase
 {
