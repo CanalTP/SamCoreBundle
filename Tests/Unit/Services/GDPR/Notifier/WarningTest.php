@@ -22,7 +22,7 @@ class WarningTest extends GdprTestCase
 
     public function testHandleWithUsualUser()
     {
-        $user = $this->mockUser(1, null);
+        $user = $this->mockUser(1, null, new \DateTime());
 
         $notifier = new Warning(
             $this->mockObjectManager(1, 1),
@@ -77,7 +77,7 @@ class WarningTest extends GdprTestCase
             $this->mockTranslator()
         );
 
-        $user = $this->mockUser(1, null);
+        $user = $this->mockUser(1, null, new \DateTime());
         $this->assertEquals(false, $notifier->handle($user));
     }
 
@@ -100,7 +100,7 @@ class WarningTest extends GdprTestCase
             $this->mockTranslator()
         );
 
-        $user = $this->mockUser(1, null);
+        $user = $this->mockUser(1, null, new \DateTime());
         $this->assertEquals(false, $notifier->handle($user));
     }
 }

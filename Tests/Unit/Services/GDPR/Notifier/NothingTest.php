@@ -15,7 +15,7 @@ class NothingTest extends GdprTestCase
 
     public function testHandleWithUsualUser()
     {
-        $user = $this->mockUser(1, null);
+        $user = $this->mockUser(1, null, new \DateTime());
 
         $notifier = new Nothing(
             $this->mockObjectManager(0, 0),
@@ -31,7 +31,7 @@ class NothingTest extends GdprTestCase
 
     public function testHandleUserWithoutCustomer()
     {
-        $user = $this->mockUserWithoutCustomer(1, null);
+        $user = $this->mockUserWithoutCustomer(1, null, new \DateTime());
 
         $notifier = new Nothing(
             $this->mockObjectManager(0, 0),

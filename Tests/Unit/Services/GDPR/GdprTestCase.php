@@ -25,30 +25,32 @@ class GdprTestCase extends UnitTestCase
         return $mock;
     }
 
-    protected function mockUser($id, $deletionDate, $lastLoginDate = null, $isSuperAdmin = false, $mockMethods = [])
+    protected function mockUser($id, $deletionDate, $creationDate, $lastLoginDate = null, $isSuperAdmin = false, $mockMethods = [])
     {
-        return $this->stubUser($id, $deletionDate, $lastLoginDate, $isSuperAdmin, $mockMethods, $this->mockCustomer());
+        return $this->stubUser($id, $deletionDate, $creationDate, $lastLoginDate, $isSuperAdmin, $mockMethods, $this->mockCustomer());
     }
 
     protected function mockUserWithoutCustomer(
-        $id,
+        $id,        
         $deletionDate,
+        $creationDate,
         $lastLoginDate = null,
         $isSuperAdmin = false,
         $mockMethods = []
     ) {
-        return $this->stubUser($id, $deletionDate, $lastLoginDate, $isSuperAdmin, $mockMethods, null);
+        return $this->stubUser($id, $deletionDate, $creationDate, $lastLoginDate, $isSuperAdmin, $mockMethods, null);
     }
 
     protected function stubUser(
         $id,
         $deletionDate,
+        $creationDate,
         $lastLoginDate = null,
         $isSuperAdmin = false,
         $mockMethods = [],
         $customer = null
     ) {
-        $methods = array_merge(['getId', 'getLastLogin', 'getDeletionDate', 'getCustomer', 'hasRole'], $mockMethods);
+        $methods = array_merge(['getId', 'getCreationDate', 'getLastLogin', 'getDeletionDate', 'getCustomer', 'hasRole'], $mockMethods);
 
         $user = $this->getMockBuilder(User::class)
             ->disableOriginalConstructor()
@@ -58,6 +60,10 @@ class GdprTestCase extends UnitTestCase
         $user
             ->method('getId')
             ->willReturn($id);
+
+        $user
+            ->method('getCreationDate')
+            ->willReturn($creationDate);
 
         $user
             ->method('getLastLogin')
@@ -79,7 +85,7 @@ class GdprTestCase extends UnitTestCase
 
         return $user;
     }
-
+    
     protected function getUserDeletionDate($user)
     {
         $reflectionClass = new \ReflectionClass(User::class);
