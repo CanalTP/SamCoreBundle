@@ -26,14 +26,15 @@ class Factory
         }
 
         $lastLoginDate = $user->getLastLogin();
+        $creationDate = $user->getCreatedAt();
         $deletionDate = $user->getDeletionDate();
 
-        //if regular user has never been connected and deletion date wasn't set => notify them
-        if (!$lastLoginDate && !$deletionDate) {
+        //if user has never been connected, deletion date isn't set and creation date <= 5 month
+        if (!$lastLoginDate && !$deletionDate && self::dateIsBeforeInactivityLimit($creationDate)) {
             return $container->get('sam.gdpr.warning.notifier');
         }
 
-        //if user last login is set and deletion date is not set => notify only if last login date <= 5 month
+        //if user last login is set and deletion date  isn't set => notify only if last login date <= 5 month
         if ($lastLoginDate && !$deletionDate && self::dateIsBeforeInactivityLimit($lastLoginDate)) {
             return $container->get('sam.gdpr.warning.notifier');
         }
@@ -43,7 +44,7 @@ class Factory
             return $container->get('sam.gdpr.deletion.notifier');
         }
 
-        //if user has login and deletion dates => if deletion - last login date >= 6 months, then remove them
+        //if user has login and deletion dates => if deletion - last login date >= 6 month, then remove them
         //                                        else set deletion date to null
         if ($lastLoginDate && $deletionDate) {
             if (!self::dateDiffGreaterThanLimit($lastLoginDate, $deletionDate)) {
