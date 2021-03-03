@@ -34,7 +34,7 @@ class GdprTestCase extends UnitTestCase
     }
 
     protected function mockUserWithoutCustomer(
-        $id,        
+        $id,
         $deletionDate,
         $creationDate = null,
         $lastLoginDate = null,
@@ -56,7 +56,7 @@ class GdprTestCase extends UnitTestCase
         $mockMethods = [],
         $customer = null
     ) {
-        $methods = array_merge(['getId', 'getCreationDate', 'getLastLogin', 'getDeletionDate', 'getCustomer', 'hasRole'], $mockMethods);
+        $methods = array_merge(['getId', 'getCreatedAt', 'getLastLogin', 'getDeletionDate', 'getCustomer', 'hasRole'], $mockMethods);
 
         $user = $this->getMockBuilder(User::class)
             ->disableOriginalConstructor()
@@ -68,7 +68,7 @@ class GdprTestCase extends UnitTestCase
             ->willReturn($id);
 
         $user
-            ->method('getCreationDate')
+            ->method('getCreatedAt')
             ->willReturn($creationDate);
 
         $user
@@ -91,7 +91,7 @@ class GdprTestCase extends UnitTestCase
 
         return $user;
     }
-    
+
     protected function getUserDeletionDate($user)
     {
         $reflectionClass = new \ReflectionClass(User::class);

@@ -68,7 +68,7 @@ class ResetTest extends GdprTestCase
             $this->mockTranslator()
         );
 
-        $user = $this->mockUser(1, null, new \DateTime());
+        $user = $this->mockUser(1, null);
         $this->assertEquals(false, $notifier->handle($user));
         $this->assertLogMessageExists('test', Logger::ERROR);
     }
