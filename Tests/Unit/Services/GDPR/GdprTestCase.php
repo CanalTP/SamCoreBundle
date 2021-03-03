@@ -25,19 +25,25 @@ class GdprTestCase extends UnitTestCase
         return $mock;
     }
 
-    protected function mockUser($id, $deletionDate, $creationDate, $lastLoginDate = null, $isSuperAdmin = false, $mockMethods = [])
+    protected function mockUser($id, $deletionDate, $creationDate = null, $lastLoginDate = null, $isSuperAdmin = false, $mockMethods = [])
     {
+        if (is_null($creationDate)) {
+            $creationDate = new \DateTime();
+        }
         return $this->stubUser($id, $deletionDate, $creationDate, $lastLoginDate, $isSuperAdmin, $mockMethods, $this->mockCustomer());
     }
 
     protected function mockUserWithoutCustomer(
         $id,        
         $deletionDate,
-        $creationDate,
+        $creationDate = null,
         $lastLoginDate = null,
         $isSuperAdmin = false,
         $mockMethods = []
     ) {
+        if (is_null($creationDate)) {
+            $creationDate = new \DateTime();
+        }
         return $this->stubUser($id, $deletionDate, $creationDate, $lastLoginDate, $isSuperAdmin, $mockMethods, null);
     }
 

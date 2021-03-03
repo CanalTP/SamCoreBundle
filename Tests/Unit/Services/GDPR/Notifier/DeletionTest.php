@@ -14,7 +14,7 @@ class DeletionTest extends GdprTestCase
 
     public function testHandleWithUsualUser()
     {
-        $user = $this->mockUser(1, $this->generateDateInPast(), new \DateTime());
+        $user = $this->mockUser(1, $this->generateDateInPast());
 
         $notifier = new Deletion(
             $this->mockObjectManager(0, 1),
@@ -60,7 +60,7 @@ class DeletionTest extends GdprTestCase
             $this->mockTranslator()
         );
 
-        $user = $this->mockUser(1, $this->generateDateInFuture(), new \DateTime());
+        $user = $this->mockUser(1, $this->generateDateInFuture());
         $this->assertEquals(false, $notifier->handle($user));
     }
 
@@ -83,7 +83,7 @@ class DeletionTest extends GdprTestCase
             $this->mockTranslator()
         );
 
-        $user = $this->mockUser(1, $this->generateDateInPast(), new \DateTime());
+        $user = $this->mockUser(1, $this->generateDateInPast());
         $this->assertEquals(false, $notifier->handle($user));
     }
 

@@ -15,7 +15,7 @@ class SuperAdminTest extends GdprTestCase
 
     public function testHandle()
     {
-        $user = $this->mockUser(1, null, new \DateTime());
+        $user = $this->mockUser(1, null);
 
         $notifier = new SuperAdmin(
             $this->mockObjectManager(0, 0),
