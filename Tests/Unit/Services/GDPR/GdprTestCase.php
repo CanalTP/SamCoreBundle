@@ -25,30 +25,38 @@ class GdprTestCase extends UnitTestCase
         return $mock;
     }
 
-    protected function mockUser($id, $deletionDate, $lastLoginDate = null, $isSuperAdmin = false, $mockMethods = [])
+    protected function mockUser($id, $deletionDate, $creationDate = null, $lastLoginDate = null, $isSuperAdmin = false, $mockMethods = [])
     {
-        return $this->stubUser($id, $deletionDate, $lastLoginDate, $isSuperAdmin, $mockMethods, $this->mockCustomer());
+        if (is_null($creationDate)) {
+            $creationDate = new \DateTime();
+        }
+        return $this->stubUser($id, $deletionDate, $creationDate, $lastLoginDate, $isSuperAdmin, $mockMethods, $this->mockCustomer());
     }
 
     protected function mockUserWithoutCustomer(
         $id,
         $deletionDate,
+        $creationDate = null,
         $lastLoginDate = null,
         $isSuperAdmin = false,
         $mockMethods = []
     ) {
-        return $this->stubUser($id, $deletionDate, $lastLoginDate, $isSuperAdmin, $mockMethods, null);
+        if (is_null($creationDate)) {
+            $creationDate = new \DateTime();
+        }
+        return $this->stubUser($id, $deletionDate, $creationDate, $lastLoginDate, $isSuperAdmin, $mockMethods, null);
     }
 
     protected function stubUser(
         $id,
         $deletionDate,
+        $creationDate,
         $lastLoginDate = null,
         $isSuperAdmin = false,
         $mockMethods = [],
         $customer = null
     ) {
-        $methods = array_merge(['getId', 'getLastLogin', 'getDeletionDate', 'getCustomer', 'hasRole'], $mockMethods);
+        $methods = array_merge(['getId', 'getCreatedAt', 'getLastLogin', 'getDeletionDate', 'getCustomer', 'hasRole'], $mockMethods);
 
         $user = $this->getMockBuilder(User::class)
             ->disableOriginalConstructor()
@@ -58,6 +66,10 @@ class GdprTestCase extends UnitTestCase
         $user
             ->method('getId')
             ->willReturn($id);
+
+        $user
+            ->method('getCreatedAt')
+            ->willReturn($creationDate);
 
         $user
             ->method('getLastLogin')

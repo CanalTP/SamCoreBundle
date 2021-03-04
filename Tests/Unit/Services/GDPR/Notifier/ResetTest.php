@@ -15,7 +15,7 @@ class ResetTest extends GdprTestCase
 
     public function testHandle()
     {
-        $user = $this->mockUser(1, new \DateTime(), null, false, ['setDeletionDate']);
+        $user = $this->mockUser(1, new \DateTime(), new \DateTime(), null, false, ['setDeletionDate']);
         $user
             ->expects($this->once())
             ->method('setDeletionDate')

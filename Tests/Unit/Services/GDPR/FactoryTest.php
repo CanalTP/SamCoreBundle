@@ -49,24 +49,24 @@ class FactoryTest extends GdprTestCase
         $tenMonthAgo->sub(new \DateInterval('P10M'));
 
         return [
-            [$this->mockUser(0, null, null, true),  SuperAdmin::class],
-            [$this->mockUser(1, $oneMonthLater, null, true), SuperAdmin::class],
-            [$this->mockUser(2, null, $now, true), SuperAdmin::class],
-            [$this->mockUser(3, $oneMonthLater, $now, true), SuperAdmin::class],
-            [$this->mockUser(4, null, null), Warning::class],
-            [$this->mockUser(5, null, $sixMonthAgo), Warning::class],
-            [$this->mockUser(6, null, $sevenMonthAgo), Warning::class],
-            [$this->mockUser(7, null, $oneMonthAgo), Nothing::class],
-            [$this->mockUser(8, $oneMonthAgo, null), Deletion::class],
-            [$this->mockUser(9, $sevenMonthAgo, null), Deletion::class],
-            [$this->mockUser(10, $oneMonthLater, null), Nothing::class],
-            [$this->mockUser(11, $now, $sevenMonthAgo), Deletion::class],
-            [$this->mockUser(12, $now, $oneMonthAgo), Reset::class],
-            [$this->mockUser(13, $oneMonthAgo, $tenMonthAgo), Deletion::class],
-            [$this->mockUser(14, $oneMonthLater, $tenMonthAgo), Nothing::class],
-            [$this->mockUser(15, $oneMonthAgo, $fiveMonthAgo), Reset::class],
-            [$this->mockUser(16, $oneMonthLater, $oneMonthAgo), Reset::class],
-
+            [$this->mockUser(0, null, $sevenMonthAgo, null, true),  SuperAdmin::class],
+            [$this->mockUser(1, $oneMonthLater, $sevenMonthAgo, null, true), SuperAdmin::class],
+            [$this->mockUser(2, null, $sevenMonthAgo, $now, true), SuperAdmin::class],
+            [$this->mockUser(3, $oneMonthLater, $sevenMonthAgo, $now, true), SuperAdmin::class],
+            [$this->mockUser(4, null, $sevenMonthAgo, null), Warning::class],
+            [$this->mockUser(5, null, $sevenMonthAgo, $sixMonthAgo), Warning::class],
+            [$this->mockUser(6, null, $sevenMonthAgo, $sevenMonthAgo), Warning::class],
+            [$this->mockUser(7, null, $sevenMonthAgo, $oneMonthAgo), Nothing::class],
+            [$this->mockUser(8, $oneMonthAgo, $sevenMonthAgo, null), Deletion::class],
+            [$this->mockUser(9, $sevenMonthAgo, $sevenMonthAgo, null), Deletion::class],
+            [$this->mockUser(10, $oneMonthLater, $sevenMonthAgo, null), Nothing::class],
+            [$this->mockUser(11, $now, $sevenMonthAgo, $sevenMonthAgo), Deletion::class],
+            [$this->mockUser(12, $now, $sevenMonthAgo, $oneMonthAgo), Reset::class],
+            [$this->mockUser(13, $oneMonthAgo, $sevenMonthAgo, $tenMonthAgo), Deletion::class],
+            [$this->mockUser(14, $oneMonthLater, $sevenMonthAgo, $tenMonthAgo), Nothing::class],
+            [$this->mockUser(15, $oneMonthAgo, $sevenMonthAgo, $fiveMonthAgo), Reset::class],
+            [$this->mockUser(16, $oneMonthLater, $sevenMonthAgo, $oneMonthAgo), Reset::class],
+            [$this->mockUser(17, null, $oneMonthAgo, null), Nothing::class]
         ];
     }
 
