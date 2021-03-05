@@ -28,6 +28,11 @@ class Factory
         $lastLoginDate = $user->getLastLogin();
         $creationDate = $user->getCreatedAt();
         $deletionDate = $user->getDeletionDate();
+        //if user has never been connected, deletion date isn't set and no creation date (DB fixture init)
+        if (!$lastLoginDate && !$deletionDate && !$creationDate) {
+            return $container->get('sam.gdpr.warning.notifier');
+        }
+
         //if user has never been connected, deletion date isn't set and creation date <= 5 month
         if (!$lastLoginDate && !$deletionDate && self::dateIsBeforeInactivityLimit($creationDate)) {
             return $container->get('sam.gdpr.warning.notifier');
